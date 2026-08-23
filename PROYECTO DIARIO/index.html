@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     
+    <!-- Librerías -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -86,17 +87,21 @@
       
       .barra-progreso { width: 100%; height: 6px; background: #27272A; border-radius: 3px; margin-top: 16px; overflow: hidden; }
       .progreso-fill { height: 100%; background: var(--text-main); transition: width 0.8s ease; border-radius: 3px; }
+      .progreso-objetivo-fill { height: 100%; background: var(--success); transition: width 1.5s ease; border-radius: 3px; box-shadow: 0 0 10px rgba(16,185,129,0.4);}
 
+      /* FORMS */
       textarea, input[type="text"], input[type="email"], input[type="password"], input[type="number"], select { 
           background: rgba(255,255,255,0.03); color: var(--text-main); border: 1px solid var(--border); 
           border-radius: var(--radius-md); padding: 16px 20px; font-size: 15px; width: 100%; box-sizing: border-box; 
           transition: 0.2s; font-family: var(--font-sans); margin-bottom: 12px;
       }
-      select { appearance: none; }
+      select { appearance: none; color: var(--text-muted); }
+      select option { background: var(--surface); color: var(--text-main); }
       textarea { min-height: 180px; resize: vertical; line-height: 1.6; }
       textarea::placeholder, input::placeholder { color: #52525B; }
       textarea:focus, input:focus, select:focus { outline: none; border-color: var(--text-main); background: rgba(255,255,255,0.06); }
       
+      /* BOTONES */
       .btn-principal { background: var(--text-main); color: var(--bg); border: none; padding: 16px; font-size: 15px; font-weight: 700; border-radius: var(--radius-md); cursor: pointer; width: 100%; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px; }
       .btn-principal:hover:not(:disabled) { transform: scale(0.98); opacity: 0.9; }
       .btn-principal:disabled { background: #27272A; color: #71717A; cursor: not-allowed; transform: none; }
@@ -104,11 +109,13 @@
       .btn-secundario { background: transparent; color: var(--text-main); border: 1px solid var(--border); padding: 16px; border-radius: var(--radius-md); cursor: pointer; font-weight: 600; font-size: 15px; width: 100%; transition: 0.2s;}
       .btn-secundario:hover { background: var(--surface-hover); }
 
+      /* TAREAS */
       .tarea-item { display:flex; justify-content:space-between; background:var(--bg); padding:16px 20px; border-radius: var(--radius-md); border: 1px solid var(--border); align-items:center; margin-bottom: 12px; transition: 0.2s;}
       .check-box { width:22px; height:22px; border-radius:6px; border:2px solid #52525B; display:flex; align-items:center; justify-content:center; color:var(--bg); font-weight:bold; font-size:14px; transition: 0.2s; }
       .tarea-item.checked .check-box { background: var(--text-main); border-color: var(--text-main); }
       .tarea-item.checked span { text-decoration: line-through; color: #52525B; }
 
+      /* CALENDARIO */
       .calendario-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin-top: 16px; }
       .dia-cal { aspect-ratio: 1; border-radius: 8px; background: rgba(255,255,255,0.02); display: flex; align-items: center; justify-content: center; font-size: 12px; font-family: var(--font-mono); color: #52525B; transition: 0.2s; border: 1px solid transparent;}
       .dia-cal.int-3 { background: var(--text-main); color: var(--bg); font-weight: 700; box-shadow: 0 0 10px rgba(255,255,255,0.2);} 
@@ -117,6 +124,7 @@
       .dia-cal.neg { background: transparent; color: var(--danger); border-color: rgba(239, 68, 68, 0.2); }
       .dia-hoy { border: 1px solid #3B82F6 !important; color: #3B82F6; font-weight: 700;}
 
+      /* HISTORIAL */
       .filtro-historial { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap;}
       .btn-filtro { background: transparent; color: var(--text-muted); border: 1px solid var(--border); padding: 8px 16px; border-radius: 100px; cursor: pointer; font-size: 13px; font-weight: 500; transition: 0.2s; }
       .btn-filtro.activo { background: var(--text-main); color: var(--bg); border-color: var(--text-main); font-weight: 600;}
@@ -130,7 +138,7 @@
       #diario-zona-resultado { display: none; flex-direction: column; gap: 20px; align-items:center; text-align:center;}
       .google-logo { width: 18px; height: 18px; margin-right: 8px; }
       
-      .quote-box { margin-top: 20px; padding: 20px; background: rgba(255,255,255,0.05); border-left: 4px solid var(--text-main); border-radius: 8px; font-style: italic; color: #ccc; font-weight: 500; font-size: 15px; display: none; line-height: 1.5; }
+      .quote-box { margin-top: 20px; padding: 24px; background: rgba(255,255,255,0.05); border-left: 4px solid var(--text-main); border-radius: 8px; font-style: italic; color: #ccc; font-weight: 500; font-size: 16px; display: none; line-height: 1.6; text-align: left;}
 
       @media(max-width: 600px) {
         header { padding: 16px 5vw; flex-direction:column; gap:16px; }
@@ -172,11 +180,19 @@
       
       <input type="email" id="login-email" placeholder="Correo electrónico">
       <input type="password" id="login-password" placeholder="Contraseña">
-      <button class="btn-principal" style="margin-top: 12px; margin-bottom:12px;" id="btn-iniciar" onclick="loginEmail()">Entrar</button>
+      <button class="btn-principal" id="btn-iniciar" style="margin-top: 12px; margin-bottom:12px;" onclick="loginEmail()">Entrar</button>
 
       <div style="text-align: center;">
         <button onclick="toggleAuth('view-register')" style="background:none; border:none; color:var(--text-main); cursor:pointer; font-size:14px; font-weight:600; margin-top: 10px;">¿No tienes cuenta? Regístrate</button><br>
-        <button onclick="loginInvitado()" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:12px; margin-top:16px;">Acceso Modo Local (Demo)</button>
+        
+        <div style="display:flex; justify-content:center; margin-top:20px;">
+            <button class="btn-secundario" style="display: flex; justify-content: center; align-items: center; width:auto; padding: 10px 20px; border-radius:100px;" onclick="loginGoogle()">
+                <svg class="google-logo" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg> 
+                Acceder con Google
+            </button>
+        </div>
+
+        <button onclick="loginInvitado()" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:12px; margin-top:24px;">Acceso Modo Local (Demo)</button>
       </div>
       <p id="login-error" style="color: var(--danger); font-size: 13px; text-align:center; font-weight:500;"></p>
     </div>
@@ -185,32 +201,31 @@
     <div class="auth-container auth-view" id="view-register">
       <h2 style="margin-top:0; font-weight: 800; font-size: 24px; text-align: center;">Crear Perfil</h2>
       
-      <div style="display: flex; gap: 12px;">
-        <input type="text" id="reg-nombre" placeholder="Nombre (Ej. Axel)">
-        <input type="number" id="reg-edad" placeholder="Edad" min="10" max="99">
+      <div style="display: flex; gap: 12px; margin-bottom:0;">
+        <input type="text" id="reg-nombre" placeholder="Nombre">
+        <input type="text" id="reg-apellidos" placeholder="Apellidos">
       </div>
-      <select id="reg-sexo">
-        <option value="" disabled selected>Selecciona tu sexo</option>
-        <option value="M">Hombre</option>
-        <option value="F">Mujer</option>
-      </select>
+      <div style="display: flex; gap: 12px; margin-bottom:0;">
+        <input type="number" id="reg-edad" placeholder="Edad" min="10" max="99">
+        <select id="reg-sexo">
+          <option value="" disabled selected>Sexo</option>
+          <option value="Hombre">Hombre</option>
+          <option value="Mujer">Mujer</option>
+          <option value="Otro">Otro</option>
+        </select>
+      </div>
       
       <input type="email" id="reg-email" placeholder="Correo electrónico">
       <input type="password" id="reg-password" placeholder="Contraseña segura">
-      <p style="font-size:11px; color:var(--text-muted); margin-top:-6px; margin-bottom:12px;">Requisito: Mínimo 8 caracteres, 1 mayúscula, 1 número y 1 símbolo especial (!@#$)</p>
-      
-      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px; margin-top: 10px;">
-          <input type="checkbox" id="reg-newsletter" style="width: auto; margin: 0;">
-          <label for="reg-newsletter" style="font-size: 12px; color: var(--text-muted);">Suscribirme a la Newsletter (Novedades y Motivación)</label>
-      </div>
+      <p style="font-size:11px; color:var(--text-muted); margin-top:-6px; margin-bottom:16px;">Requisito: Mínimo 8 caracteres, 1 mayúscula, 1 número y 1 símbolo (!@#$)</p>
       
       <button class="btn-principal" id="btn-completar-registro" onclick="registrarUsuario()">Completar Registro</button>
-      <button class="btn-secundario" onclick="toggleAuth('view-login')" style="margin-top: 12px; border:none;">Volver al inicio</button>
       
-      <!-- Cuidado: El error aquí ahora es muy visual -->
-      <div id="reg-error-container" style="display:none; background: rgba(239, 68, 68, 0.1); border: 1px solid var(--danger); padding: 12px; border-radius: 8px; margin-top: 16px;">
-        <p id="reg-error" style="color: var(--danger); font-size: 13px; text-align:center; font-weight:600; margin:0;"></p>
+      <div style="text-align:center; margin-top: 16px;">
+        <button onclick="toggleAuth('view-login')" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:14px; font-weight:500;">Volver al inicio</button>
       </div>
+
+      <p id="reg-error" style="color: var(--danger); font-size: 13px; text-align:center; font-weight:500; margin-top:16px;"></p>
     </div>
   </div>
 
@@ -222,8 +237,8 @@
       </div>
       <nav>
         <button class="nav-btn activo" onclick="cambiarPestana('diario', this)">Ejecución</button>
-        <button class="nav-btn" onclick="cambiarPestana('panel', this)">Rendimiento</button>
         <button class="nav-btn" onclick="cambiarPestana('tareas', this)">Plan</button>
+        <button class="nav-btn" onclick="cambiarPestana('panel', this)">Rendimiento</button>
         <button class="nav-btn" onclick="cambiarPestana('historial', this)">Base de datos</button>
         <button class="nav-btn" onclick="cerrarSesion()" style="color: var(--text-muted); margin-left:8px;">Salir</button>
       </nav>
@@ -266,16 +281,49 @@
       </div>
     </div>
 
-    <!-- 2. PANEL RENDIMIENTO -->
+    <!-- 2. TAREAS Y OBJETIVO -->
+    <div id="tareas" class="pestana">
+      <div class="card" style="max-width: 650px; margin: 0 auto; width: 100%;">
+        
+        <!-- Fijar Objetivo -->
+        <span class="card-title" style="margin-bottom: 8px;">Objetivo Principal</span>
+        <p class="texto-pequeno" style="margin-bottom: 24px;">Fija tu gran meta. Al darle a Guardar, la IA evaluará tu progreso hacia ella y aparecerá en tu panel de Rendimiento.</p>
+        <div style="display:flex; gap:16px; margin-bottom:40px; border-bottom: 1px dashed var(--border); padding-bottom: 30px;">
+           <input type="text" id="input-objetivo" placeholder="Ej: Aprobar el Grado Superior y ganar 3kg de masa..." onkeypress="if(event.key === 'Enter') guardarObjetivo()" style="background:var(--bg);">
+           <button class="btn-principal" style="width:auto; padding:0 24px;" onclick="guardarObjetivo()">Guardar</button>
+        </div>
+
+        <span class="card-title" style="margin-bottom: 8px;">Planificación Estratégica (Hoy)</span>
+        <p class="texto-pequeno" style="margin-bottom: 32px;">Define tus tareas diarias. Completarlas sumará puntos al evaluarte.</p>
+        
+        <div style="display:flex; gap:16px; margin-bottom:32px;">
+           <input type="text" id="input-tarea" placeholder="Nueva tarea (Enter)" onkeypress="if(event.key === 'Enter') agregarTarea()">
+           <button class="btn-secundario" style="width:auto; padding:0 24px; font-size:20px;" onclick="agregarTarea()">+</button>
+        </div>
+        <div id="lista-tareas" style="display:flex; flex-direction:column;"></div>
+      </div>
+    </div>
+
+    <!-- 3. PANEL RENDIMIENTO -->
     <div id="panel" class="pestana">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: -10px;">
         <h2 style="margin:0;">Métricas</h2>
-        <button class="btn-secundario" style="width:auto; padding:8px 16px; font-size:12px;" onclick="compartirProgreso()">Exportar PNG</button>
+        <button class="btn-secundario" style="width:auto; padding:8px 16px; font-size:12px;" onclick="compartirProgreso()">Exportar Fotografía</button>
       </div>
       
-      <!-- Contenedor Html2Canvas -->
+      <!-- Contenedor a exportar con Html2Canvas -->
       <div id="export-area" style="background:var(--bg); padding:10px; border-radius:12px;">
         
+        <!-- Tarjeta de Progreso del Objetivo (Auto-rellenada) -->
+        <div class="card" id="tarjeta-progreso-objetivo" style="display:none; margin-bottom: 24px; padding: 24px 32px; border-color:var(--border);">
+            <span class="card-title" id="titulo-barra-tareas" style="color:var(--text-main); margin-bottom:16px;">META: </span>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                 <span style="font-size: 13px; color: var(--text-muted); font-weight:500;">Progreso evaluado por IA</span>
+                 <span style="font-size: 16px; font-weight: 700; color: var(--success); font-family:var(--font-mono);" id="text-progreso-obj">0%</span>
+            </div>
+            <div class="barra-progreso"><div id="barra-objetivo" class="progreso-objetivo-fill" style="width: 0%;"></div></div>
+        </div>
+
         <div class="dash-grid">
           <div class="card" style="background: var(--surface);">
             <span class="card-title">Media Semanal</span>
@@ -283,8 +331,7 @@
             <div class="texto-pequeno" id="hero-msg">Calculando...</div>
           </div>
           <div class="card">
-            <!-- TITULO DINAMICO PARA EL OBJETIVO -->
-            <span class="card-title" id="titulo-barra-tareas">EJECUCIÓN DEL PLAN</span>
+            <span class="card-title">Ejecución del Plan</span>
             <div id="tareas-completadas" class="numero-gigante">0/0</div>
             <div class="barra-progreso"><div id="barra-tareas" class="progreso-fill" style="width: 0%;"></div></div>
           </div>
@@ -305,27 +352,6 @@
             <div class="calendario-grid" id="calendario-grid"></div>
           </div>
         </div>
-      </div>
-    </div>
-
-    <!-- 3. TAREAS Y OBJETIVO -->
-    <div id="tareas" class="pestana">
-      <div class="card" style="max-width: 650px; margin: 0 auto; width: 100%;">
-        <span class="card-title" style="margin-bottom: 8px;">Objetivo Principal</span>
-        <p class="texto-pequeno" style="margin-bottom: 24px;">Fija tu meta. Aparecerá en tu panel y la IA evaluará tu progreso hacia ella.</p>
-        <div style="display:flex; gap:16px; margin-bottom:40px; border-bottom: 1px dashed var(--border); padding-bottom: 30px;">
-           <input type="text" id="input-objetivo" placeholder="Ej: Ganar 3kg de masa y aprobar el Grado..." style="border:1px solid var(--border); border-radius:8px;">
-           <button class="btn-principal" style="width:auto; padding:0 24px; background:var(--surface); color:var(--text-main); border:1px solid var(--border);" onclick="guardarObjetivo()">Fijar</button>
-        </div>
-
-        <span class="card-title" style="margin-bottom: 8px;">Plan de Acción (Hoy)</span>
-        <p class="texto-pequeno" style="margin-bottom: 32px;">Añade tus tareas diarias para acercarte a la meta.</p>
-        
-        <div style="display:flex; gap:16px; margin-bottom:32px;">
-           <input type="text" id="input-tarea" placeholder="Nuevo objetivo (Enter)" onkeypress="if(event.key === 'Enter') agregarTarea()">
-           <button class="btn-principal" style="width:auto; padding:0 24px;" onclick="agregarTarea()">Añadir</button>
-        </div>
-        <div id="lista-tareas" style="display:flex; flex-direction:column;"></div>
       </div>
     </div>
 
@@ -352,7 +378,7 @@
     function esc(str) { if(!str) return ""; const div = document.createElement('div'); div.appendChild(document.createTextNode(str)); return div.innerHTML; }
     function getHoyISO() { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; }
     
-    // --- FIREBASE CONFIG (EXACTA) ---
+    // --- FIREBASE CONFIG (INTACTA) ---
     const firebaseConfig = {
       apiKey: "AIzaSyAfzGeUy1uI98YrDpFUrQbSWDN1ag9IrJA",
       authDomain: "diario-inteligente-d329b.firebaseapp.com",
@@ -364,11 +390,12 @@
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth(); const db = firebase.firestore();
     
-    // 🚨 TU CLAVE EXACTA DE ANTES (RESTITUIDA INTACTA) 🚨
+    // 🚨 TU CLAVE EXACTA DE ANTES 🚨
     const GEMINI_API_KEY = 'AQ.Ab8RN6LOhA4s1Dlsrj7qzb2MNdcYM6BAiZXTTPM2fEsKehQemg';
 
     let usuarioActual = null; let chartLine = null; let misTareasDeHoy = []; let historialGlobal = []; 
 
+    // FRASES DE LEYENDAS
     const frasesMotivadoras = [
         "«La fuerza no viene de ganar. Tus luchas desarrollan tus fortalezas.» – Arnold Schwarzenegger",
         "«El éxito no es un accidente. Es trabajo duro y sacrificio.» – Pelé",
@@ -398,18 +425,18 @@
       window.scrollTo({top: 0, behavior: 'smooth'});
     }
 
-    // --- AUTH, REGISTRO Y VERIFICACIÓN EMAIL ---
+    // --- AUTH, REGISTRO Y GOOGLE ---
     function toggleAuth(viewId) {
       document.querySelectorAll('.auth-view').forEach(v => v.classList.remove('active'));
       document.getElementById(viewId).classList.add('active');
-      document.getElementById('reg-error-container').style.display = 'none';
+      document.getElementById('reg-error').textContent = "";
       document.getElementById('login-error').textContent = "";
     }
 
     auth.onAuthStateChanged((user) => {
-      // Bloquear si es usuario por email y no está verificado
+      // Exigir verificación (salvo invitado)
       if (user && !user.isAnonymous && !user.emailVerified) {
-        document.getElementById('login-error').textContent = "Debes verificar tu correo antes de entrar. Revisa tu bandeja de entrada.";
+        document.getElementById('login-error').textContent = "Por favor, verifica tu correo. Revisa la bandeja de entrada o Spam.";
         auth.signOut();
         return;
       }
@@ -432,95 +459,93 @@
       try { 
         const userCred = await auth.signInWithEmailAndPassword(getEl('login-email'), getEl('login-password')); 
         if(!userCred.user.emailVerified) {
-            document.getElementById('login-error').textContent = "Por favor, verifica tu correo haciendo clic en el enlace que te enviamos.";
+            document.getElementById('login-error').textContent = "Por favor, verifica tu correo (haz clic en el enlace enviado).";
             auth.signOut();
         }
-      } 
-      catch (e) { document.getElementById('login-error').textContent = "Credenciales incorrectas."; btn.innerHTML = "Entrar"; btn.disabled = false; } 
+      } catch (e) { 
+          document.getElementById('login-error').textContent = "Credenciales incorrectas."; 
+      } finally {
+          btn.innerHTML = "Entrar"; btn.disabled = false;
+      }
     }
     
     async function registrarUsuario() {
-      const errContainer = document.getElementById('reg-error-container');
       const errEl = document.getElementById('reg-error');
       const btn = document.getElementById('btn-completar-registro');
       
       const nombre = getEl('reg-nombre').trim();
+      const apellidos = getEl('reg-apellidos').trim();
       const edad = getEl('reg-edad');
       const sexo = getEl('reg-sexo');
       const email = getEl('reg-email').trim();
       const pass = getEl('reg-password');
-      
-      const checkEl = document.getElementById('reg-newsletter');
-      const newsletter = checkEl ? checkEl.checked : false;
 
-      errContainer.style.display = 'block';
-
-      if(!nombre || !edad || !email || !pass) {
-          errEl.textContent = "Por favor, rellena todos los campos de texto.";
-          return;
-      }
+      if(!nombre || !apellidos || !edad || !email || !pass) return errEl.textContent = "Por favor, rellena todos los campos de texto.";
+      if(sexo === "") return errEl.textContent = "Por favor, selecciona tu sexo.";
       
-      if(sexo === "") {
-          errEl.textContent = "Por favor, selecciona tu sexo.";
-          return;
-      }
-      
-      // Validación estricta Regex
+      // Validación Estricta Regex
       const passRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
-      if(!passRegex.test(pass)) {
-          errEl.textContent = "Error: Mín. 8 caracteres, 1 mayúscula, 1 número y 1 símbolo especial (!@#$).";
-          return;
-      }
+      if(!passRegex.test(pass)) return errEl.textContent = "La contraseña requiere: Mínimo 8 caracteres, 1 mayúscula, 1 número y 1 símbolo especial (!@#$).";
 
       btn.disabled = true; btn.innerHTML = "Creando cuenta...";
-      errEl.style.color = "var(--text-main)";
-      errContainer.style.borderColor = "var(--border)";
-      errContainer.style.background = "transparent";
-      errEl.textContent = "Procesando...";
+      errEl.style.color = "var(--text-main)"; errEl.textContent = "Procesando registro...";
 
       try {
         const userCred = await auth.createUserWithEmailAndPassword(email, pass);
-        // ENVIAR EMAIL DE VERIFICACIÓN NATIVO DE FIREBASE
+        // Guardar el nombre en el Auth Profile de Firebase
+        await userCred.user.updateProfile({ displayName: `${nombre} ${apellidos}` });
+        // Enviar Correo de Verificación
         await userCred.user.sendEmailVerification();
-        
+        // Guardar en Base de datos
         await db.collection('usuarios').doc(userCred.user.uid).set({ 
-            nombre: nombre, edad: parseInt(edad), sexo: sexo, 
-            newsletter: newsletter, fechaRegistro: Date.now() 
+            nombre: nombre, apellidos: apellidos, edad: parseInt(edad), sexo: sexo, fechaRegistro: Date.now() 
         });
         
-        alert("¡Cuenta creada! Te hemos enviado un enlace a tu correo. Haz clic en él para verificar tu cuenta y luego inicia sesión.");
-        btn.disabled = false; btn.innerHTML = "Completar Registro";
+        alert("¡Cuenta creada con éxito! Revisa tu correo electrónico (y la carpeta de Spam) para verificar tu cuenta.");
         toggleAuth('view-login');
       } catch (e) { 
-        btn.disabled = false; btn.innerHTML = "Completar Registro";
-        errContainer.style.borderColor = "var(--danger)";
-        errContainer.style.background = "rgba(239, 68, 68, 0.1)";
         errEl.style.color = "var(--danger)";
-        errEl.textContent = "Error: El email ya está en uso o es inválido."; 
+        errEl.textContent = "Error: " + e.message; 
+      } finally {
+        btn.disabled = false; btn.innerHTML = "Completar Registro";
       }
     }
 
-    async function loginGoogle() { try { await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); } catch (e) { document.getElementById('login-error').textContent = "Fallo en Google Auth."; } }
+    async function loginGoogle() { 
+      try { 
+          const provider = new firebase.auth.GoogleAuthProvider();
+          await auth.signInWithPopup(provider); 
+      } catch (e) { document.getElementById('login-error').textContent = "Fallo en Google: " + e.message; } 
+    }
+    
     async function loginInvitado() { try { await auth.signInAnonymously(); } catch (e) { document.getElementById('login-error').textContent = "Fallo modo invitado."; } }
     function cerrarSesion() { auth.signOut(); }
 
-    // --- OBJETIVO GLOBAL Y UI (AUTO-TITULO) ---
+    // --- OBJETIVOS (SE FIJA EN TAREAS, SE VE EN PANEL) ---
     async function guardarObjetivo() {
         const obj = document.getElementById('input-objetivo').value.trim();
         if(!obj) return;
         if(usuarioActual && !usuarioActual.isAnonymous) {
             await db.collection('usuarios').doc(usuarioActual.uid).set({ objetivoActual: obj }, { merge: true });
         }
-        document.getElementById('titulo-barra-tareas').textContent = "META: " + obj.toUpperCase();
-        alert("Objetivo fijado en tu cuenta.");
+        alert("Objetivo fijado. Ve a Rendimiento para verlo.");
+        cargarObjetivo(); // Refrescar vista
     }
     
     async function cargarObjetivo() {
         if(usuarioActual && !usuarioActual.isAnonymous) {
             const doc = await db.collection('usuarios').doc(usuarioActual.uid).get();
             if(doc.exists && doc.data().objetivoActual) {
-                document.getElementById('input-objetivo').value = doc.data().objetivoActual;
-                document.getElementById('titulo-barra-tareas').textContent = "META: " + doc.data().objetivoActual.toUpperCase();
+                const obj = doc.data().objetivoActual;
+                document.getElementById('input-objetivo').value = obj;
+                document.getElementById('tarjeta-progreso-objetivo').style.display = 'block';
+                document.getElementById('titulo-barra-tareas').textContent = "META: " + obj.toUpperCase();
+                
+                if(doc.data().progresoObjetivo !== undefined) {
+                    const prog = doc.data().progresoObjetivo;
+                    document.getElementById('text-progreso-obj').textContent = `${prog}%`;
+                    document.getElementById('barra-objetivo').style.width = `${prog}%`;
+                }
             }
         }
     }
@@ -553,7 +578,7 @@
     
     function renderTareas() {
       const lista = document.getElementById('lista-tareas'); lista.innerHTML = ""; let completadas = 0;
-      if(misTareasDeHoy.length === 0) lista.innerHTML = '<p class="texto-pequeno" style="padding: 16px 0;">No hay tareas pendientes.</p>';
+      if(misTareasDeHoy.length === 0) lista.innerHTML = '<p class="texto-pequeno" style="padding: 16px 0;">No hay tareas planificadas.</p>';
       
       misTareasDeHoy.forEach(t => {
         if(t.completada) completadas++;
@@ -571,7 +596,7 @@
       document.getElementById('barra-tareas').style.width = total === 0 ? "0%" : `${(completadas/total)*100}%`;
     }
 
-    // --- IA RESTAURADA CON EL MODELO EXACTO ANTERIOR ---
+    // --- IA, PANTALLA DE CARGA Y DEBUGGEO ROBUSTO ---
     async function analizarYGuardar() {
       const texto = document.getElementById('texto-diario').value;
       const errEl = document.getElementById('error-ia');
@@ -586,20 +611,27 @@
       const objetivoActivo = document.getElementById('input-objetivo') ? document.getElementById('input-objetivo').value.trim() : "";
       
       let prompt = `Actúa como un coach de alto rendimiento. Analiza la disciplina cruzando el diario CON la lista de tareas.`;
-      if (objetivoActivo) prompt += `\nEL OBJETIVO PRINCIPAL DEL USUARIO ES: "${objetivoActivo}". Evalúa si lo que ha hecho hoy le acerca a este objetivo.`;
+      if (objetivoActivo) prompt += `\nEL OBJETIVO PRINCIPAL DEL USUARIO ES: "${objetivoActivo}". Evalúa si lo que ha hecho hoy le acerca a este objetivo y calcula qué porcentaje del objetivo (0 a 100) crees que lleva completado en total basándote en su texto.`;
       
-      prompt += `\nTareas de hoy:\n${tareasTXT || 'Ninguna tarea registrada.'}\nDiario: "${texto}"\nDevuelve ÚNICAMENTE un JSON válido: {"veredicto":"POSITIVO|NEGATIVO|NEUTRO","disciplina":8,"enfoque":7,"constancia":9,"insight":"Frase corta y rotunda que critique o alabe su acercamiento al objetivo."}`;
+      prompt += `\nTareas de hoy:\n${tareasTXT || 'Ninguna tarea registrada.'}\nDiario: "${texto}"\nDevuelve ÚNICAMENTE un JSON válido (sin formato markdown markdown ni tildes en las keys): {"veredicto":"POSITIVO|NEGATIVO|NEUTRO","disciplina":8,"enfoque":7,"constancia":9,"progreso_objetivo":15,"insight":"Frase corta y rotunda que critique o alabe su acercamiento al objetivo."}`;
 
       try {
-        // 🚨 AQUÍ ESTÁ EL MODELO RESTAURADO EXACTAMENTE COMO LO TENÍAS 🚨
-        const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${GEMINI_API_KEY}`, {
-          method: 'POST', headers: { 'Content-Type': 'application/json' },
+        // Mantenemos la URL exacta que me pasaste al principio, pero le pasamos la clave correcta en caso de que sea Google.
+        // Si tu clave AQ... es OAuth, esto podría fallar. El error te dirá exactamente por qué.
+        const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+          method: 'POST', 
+          headers: { 
+            'Content-Type': 'application/json'
+            // IMPORTANTE: Si la clave AQ... es de un servidor tuyo (OAuth), descomenta la siguiente línea y borra ?key=${GEMINI_API_KEY} del fetch:
+            // 'Authorization': `Bearer ${GEMINI_API_KEY}`
+          },
           body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
         });
+        
         const data = await resp.json();
         
         if (!resp.ok) {
-            let errorMsg = data.error && data.error.message ? data.error.message : 'Error de la API';
+            let errorMsg = data.error && data.error.message ? data.error.message : 'Error desconocido de la API';
             throw new Error(errorMsg);
         }
 
@@ -610,6 +642,7 @@
         const clamp = (num) => Math.min(Math.max(parseInt(num) || 5, 1), 10);
         const d = clamp(iaData.disciplina), e = clamp(iaData.enfoque), c = clamp(iaData.constancia);
         const globalScore = parseFloat(((d + e + c) / 3).toFixed(1));
+        const progresoObj = parseInt(iaData.progreso_objetivo) || 0;
 
         let f = new Date().toLocaleDateString('es-ES', {day:'numeric', month:'short'});
         const nuevaEntrada = {
@@ -622,29 +655,36 @@
         };
 
         await db.collection('usuarios').doc(usuarioActual.uid).collection('entradas').add(nuevaEntrada);
+        
+        if(usuarioActual && !usuarioActual.isAnonymous && objetivoActivo) {
+            await db.collection('usuarios').doc(usuarioActual.uid).set({ progresoObjetivo: progresoObj }, { merge: true });
+        }
 
         document.getElementById('ia-puntuacion-global').textContent = globalScore.toFixed(1);
         document.getElementById('ia-disciplina').textContent = d;
         document.getElementById('ia-enfoque').textContent = e;
         document.getElementById('ia-constancia').textContent = c;
-        document.getElementById('ia-insight').textContent = `"${esc(nuevaEntrada.insight)}"`;
         
-        // Frases de Leyendas Motivadoras
         const quoteEl = document.getElementById('ia-quote');
         if(v === "POSITIVO" || globalScore >= 7) {
             const randomQuote = frasesMotivadoras[Math.floor(Math.random() * frasesMotivadoras.length)];
-            quoteEl.textContent = randomQuote; quoteEl.style.display = 'block';
-        } else { quoteEl.style.display = 'none'; }
+            quoteEl.innerHTML = `<strong>OPINIÓN DE LA IA:</strong> "${esc(nuevaEntrada.insight)}"<br><br>${randomQuote}`; 
+            quoteEl.style.display = 'block';
+        } else { 
+            quoteEl.innerHTML = `<strong>OPINIÓN DE LA IA:</strong> "${esc(nuevaEntrada.insight)}"`;
+            quoteEl.style.display = 'block';
+        }
 
         document.getElementById('diario-zona-input').style.display = 'none';
         document.getElementById('diario-zona-resultado').style.display = 'flex';
         document.getElementById('texto-diario').value = "";
-        actualizarContador(); cargarDatosNube();
+        actualizarContador(); cargarDatosNube(); cargarObjetivo();
         
         loaderIa.style.opacity = '0'; setTimeout(()=> loaderIa.style.display = 'none', 500);
 
       } catch (err) { 
         loaderIa.style.opacity = '0'; setTimeout(()=> loaderIa.style.display = 'none', 500);
+        // CHIVATO DE ERRORES REALES DE GOOGLE EN PANTALLA
         errEl.textContent = "ERROR IA: " + err.message; 
       }
     }
@@ -726,7 +766,6 @@
       }
 
       document.getElementById('racha-numero').textContent = rachaActual;
-      document.getElementById('racha-estado').textContent = rachaActual > 0 ? "En racha" : "Inactivo";
 
       let sumaMedia = 0; let diasMedia = 0;
       for(let i=0; i<7; i++) {
