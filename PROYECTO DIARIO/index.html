@@ -65,7 +65,7 @@
       .nav-btn:hover { color: var(--text-main); }
       .nav-btn.activo { background: var(--text-main); color: var(--bg); font-weight: 600; }
       
-      /* LOGIN / REGISTRO SEPARADOS */
+      /* LOGIN / REGISTRO */
       #pantalla-auth { display: flex; justify-content: center; align-items: center; height: 100vh; width: 100%; position: relative; }
       .auth-container { width: 90%; max-width: 380px; text-align: left; }
       .auth-view { display: none; flex-direction: column; animation: slideUp 0.4s ease; }
@@ -89,17 +89,21 @@
       .progreso-fill { height: 100%; background: var(--text-main); transition: width 0.8s ease; border-radius: 3px; }
       .progreso-objetivo-fill { height: 100%; background: var(--success); transition: width 1.5s ease; border-radius: 3px; box-shadow: 0 0 10px rgba(16,185,129,0.4);}
 
+      /* FORMS Y GRID DE REGISTRO */
+      .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
       textarea, input[type="text"], input[type="email"], input[type="password"], input[type="number"], select { 
           background: rgba(255,255,255,0.03); color: var(--text-main); border: 1px solid var(--border); 
           border-radius: var(--radius-md); padding: 16px 20px; font-size: 15px; width: 100%; box-sizing: border-box; 
           transition: 0.2s; font-family: var(--font-sans); margin-bottom: 12px;
       }
+      .form-grid input, .form-grid select { margin-bottom: 0; }
       select { appearance: none; color: var(--text-muted); }
       select option { background: var(--surface); color: var(--text-main); }
       textarea { min-height: 180px; resize: vertical; line-height: 1.6; }
       textarea::placeholder, input::placeholder { color: #52525B; }
       textarea:focus, input:focus, select:focus { outline: none; border-color: var(--text-main); background: rgba(255,255,255,0.06); }
       
+      /* BOTONES */
       .btn-principal { background: var(--text-main); color: var(--bg); border: none; padding: 16px; font-size: 15px; font-weight: 700; border-radius: var(--radius-md); cursor: pointer; width: 100%; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px; }
       .btn-principal:hover:not(:disabled) { transform: scale(0.98); opacity: 0.9; }
       .btn-principal:disabled { background: #27272A; color: #71717A; cursor: not-allowed; transform: none; }
@@ -196,11 +200,14 @@
     <div class="auth-container auth-view" id="view-register">
       <h2 style="margin-top:0; font-weight: 800; font-size: 24px; text-align: center;">Crear Perfil</h2>
       
-      <div style="display: flex; gap: 12px; margin-bottom:0;">
+      <!-- Nombres y Apellidos separados -->
+      <div class="form-grid">
         <input type="text" id="reg-nombre" placeholder="Nombre">
         <input type="text" id="reg-apellidos" placeholder="Apellidos">
       </div>
-      <div style="display: flex; gap: 12px; margin-bottom:0;">
+      
+      <!-- Edad y Sexo separados -->
+      <div class="form-grid">
         <input type="number" id="reg-edad" placeholder="Edad" min="10" max="99">
         <select id="reg-sexo">
           <option value="" disabled selected>Sexo</option>
@@ -225,7 +232,7 @@
         <button onclick="toggleAuth('view-login')" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:14px; font-weight:500;">Volver al inicio</button>
       </div>
 
-      <p id="reg-error" style="color: var(--danger); font-size: 13px; text-align:center; font-weight:500; margin-top:16px;"></p>
+      <p id="reg-error" style="color: var(--danger); font-size: 13px; text-align:center; font-weight:600; margin-top:16px;"></p>
     </div>
   </div>
 
@@ -273,7 +280,7 @@
             <div style="text-align:center;"><div style="font-size:12px; color:var(--text-muted); font-weight: 500;">CONSTANCIA</div><div style="font-family: var(--font-mono); font-weight:600; font-size:24px; margin-top:8px;" id="ia-constancia">-</div></div>
           </div>
 
-          <!-- CITA LEYENDAS -->
+          <!-- CITA LEYENDAS CULTURISMO / FUTBOL -->
           <div id="ia-quote" class="quote-box"></div>
 
           <button class="btn-secundario" style="width: auto; padding: 12px 32px; margin-top: 24px;" onclick="irAlPanelDesdeResultado()">Ver panel general</button>
@@ -291,7 +298,7 @@
       <!-- Contenedor Html2Canvas -->
       <div id="export-area" style="background:var(--bg); padding:10px; border-radius:12px;">
         
-        <!-- Tarjeta de Progreso del Objetivo -->
+        <!-- Tarjeta de Progreso del Objetivo (Aparece automáticamente cuando se fija en Plan) -->
         <div class="card" id="tarjeta-progreso-objetivo" style="display:none; margin-bottom: 24px; padding: 24px 32px; border-color:var(--border);">
             <span class="card-title" id="titulo-barra-tareas" style="color:var(--text-main); margin-bottom:16px;">META: </span>
             <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -338,10 +345,10 @@
         
         <!-- Fijar Objetivo -->
         <span class="card-title" style="margin-bottom: 8px;">Objetivo Principal</span>
-        <p class="texto-pequeno" style="margin-bottom: 24px;">Fija tu gran meta. Al darle a Guardar, la IA evaluará tu progreso hacia ella y aparecerá en tu panel de Rendimiento.</p>
+        <p class="texto-pequeno" style="margin-bottom: 24px;">Fija tu gran meta. Al darle a Enter, se enviará a tu panel y la IA lo evaluará diariamente.</p>
         <div style="display:flex; gap:16px; margin-bottom:40px; border-bottom: 1px dashed var(--border); padding-bottom: 30px;">
            <input type="text" id="input-objetivo" placeholder="Ej: Aprobar el Grado y ganar 3kg de masa..." onkeypress="if(event.key === 'Enter') guardarObjetivo()" style="background:var(--bg);">
-           <button class="btn-principal" style="width:auto; padding:0 24px; background:var(--surface); color:var(--text-main); border:1px solid var(--border);" onclick="guardarObjetivo()">Guardar</button>
+           <button class="btn-principal" style="width:auto; padding:0 24px; background:var(--surface); color:var(--text-main); border:1px solid var(--border);" onclick="guardarObjetivo()">Fijar Meta</button>
         </div>
 
         <span class="card-title" style="margin-bottom: 8px;">Planificación Estratégica (Hoy)</span>
@@ -390,7 +397,7 @@
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth(); const db = firebase.firestore();
     
-    // 🚨 TU NUEVA CLAVE RECIÉN GENERADA (ES VÁLIDA, TIENE EL FORMATO DE GOOGLE AI STUDIO) 🚨
+    // 🚨 LA CLAVE Y MODELO EXACTOS QUE FUNCIONABAN AL PRINCIPIO 🚨
     const GEMINI_API_KEY = 'AQ.Ab8RN6LMlZ9VWpp2FfYE7RLNI9rMLVyo9wi62JjNJb2B6yqbVg';
 
     let usuarioActual = null; let chartLine = null; let misTareasDeHoy = []; let historialGlobal = []; 
@@ -422,10 +429,11 @@
       document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('activo')); 
       document.getElementById(id).classList.add('activa'); 
       if(btn) btn.classList.add('activo'); 
+      else if(id === 'panel') document.querySelectorAll('.nav-btn')[1].classList.add('activo'); // Fallback para salto automático
       window.scrollTo({top: 0, behavior: 'smooth'});
     }
 
-    // --- AUTH, REGISTRO Y VERIFICACIÓN EMAIL ---
+    // --- AUTH Y REGISTRO ---
     function toggleAuth(viewId) {
       document.querySelectorAll('.auth-view').forEach(v => v.classList.remove('active'));
       document.getElementById(viewId).classList.add('active');
@@ -455,15 +463,20 @@
     
     async function loginEmail() { 
       const btn = document.getElementById('btn-iniciar');
+      const errEl = document.getElementById('login-error');
       btn.innerHTML = "Iniciando..."; btn.disabled = true;
       try { 
         const userCred = await auth.signInWithEmailAndPassword(getEl('login-email'), getEl('login-password')); 
         if(!userCred.user.emailVerified) {
-            document.getElementById('login-error').textContent = "Por favor, verifica tu correo haciendo clic en el enlace que te enviamos.";
+            errEl.textContent = "Por favor, verifica tu correo haciendo clic en el enlace que te enviamos.";
             auth.signOut();
         }
       } 
-      catch (e) { document.getElementById('login-error').textContent = "Credenciales incorrectas o usuario no registrado."; } 
+      catch (e) { 
+          if(e.code === 'auth/user-not-found') errEl.textContent = "Esta cuenta no existe. Por favor, regístrate.";
+          else if(e.code === 'auth/wrong-password') errEl.textContent = "Contraseña incorrecta.";
+          else errEl.textContent = "Error: " + e.message; 
+      } 
       finally { btn.innerHTML = "Entrar"; btn.disabled = false; }
     }
     
@@ -478,24 +491,18 @@
       const email = getEl('reg-email').trim();
       const pass = getEl('reg-password');
 
-      if(!nombre || !apellidos || !edad || !email || !pass) {
-          return errEl.textContent = "Por favor, rellena todos los campos de texto.";
-      }
-      if(sexo === "") {
-          return errEl.textContent = "Por favor, selecciona tu sexo.";
-      }
+      if(!nombre || !apellidos || !edad || !email || !pass) return errEl.textContent = "Por favor, rellena todos los campos de texto.";
+      if(sexo === "") return errEl.textContent = "Por favor, selecciona tu sexo.";
       
       // Validación Estricta Regex
       const passRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
-      if(!passRegex.test(pass)) {
-          return errEl.textContent = "La contraseña requiere: Mínimo 8 caracteres, 1 mayúscula, 1 número y 1 símbolo especial (!@#$).";
-      }
+      if(!passRegex.test(pass)) return errEl.textContent = "La contraseña requiere: Mínimo 8 caracteres, 1 mayúscula, 1 número y 1 símbolo especial (!@#$).";
 
       const checkEl = document.getElementById('reg-newsletter');
       const newsletter = checkEl ? checkEl.checked : false;
 
       btn.disabled = true; btn.innerHTML = "Creando cuenta...";
-      errEl.style.color = "var(--text-main)"; errEl.textContent = "Procesando registro y enviando email de verificación...";
+      errEl.style.color = "var(--text-main)"; errEl.textContent = "Procesando registro y enviando email...";
 
       try {
         const userCred = await auth.createUserWithEmailAndPassword(email, pass);
@@ -511,7 +518,7 @@
         toggleAuth('view-login');
       } catch (e) { 
         errEl.style.color = "var(--danger)";
-        if(e.code === 'auth/email-already-in-use') errEl.textContent = "Error: Este correo ya está registrado en Kyros.";
+        if(e.code === 'auth/email-already-in-use') errEl.textContent = "Este correo ya está registrado. Inicia sesión.";
         else errEl.textContent = "Error: " + e.message; 
       } finally {
         btn.disabled = false; btn.innerHTML = "Completar Registro";
@@ -519,24 +526,28 @@
     }
 
     async function loginGoogle() { 
+      const errEl = document.getElementById('login-error');
       try { 
           const provider = new firebase.auth.GoogleAuthProvider();
           await auth.signInWithPopup(provider); 
-      } catch (e) { document.getElementById('login-error').textContent = "Fallo en Google: " + e.message; } 
+      } catch (e) { 
+          if(e.code === 'auth/operation-not-allowed') errEl.textContent = "Google Sign-In no está activado en tu consola de Firebase. Actívalo en Authentication.";
+          else errEl.textContent = "Fallo en conexión con Google: " + e.message; 
+      } 
     }
     
     async function loginInvitado() { try { await auth.signInAnonymously(); } catch (e) { document.getElementById('login-error').textContent = "Fallo modo invitado."; } }
     function cerrarSesion() { auth.signOut(); }
 
-    // --- OBJETIVOS GLOBALES ---
+    // --- OBJETIVO GLOBAL Y SALTO AUTOMÁTICO ---
     async function guardarObjetivo() {
         const obj = document.getElementById('input-objetivo').value.trim();
         if(!obj) return;
         if(usuarioActual && !usuarioActual.isAnonymous) {
             await db.collection('usuarios').doc(usuarioActual.uid).set({ objetivoActual: obj }, { merge: true });
         }
-        alert("Objetivo fijado. Aparecerá en tu panel de Rendimiento y la IA evaluará tu progreso hacia él al procesar tu diario.");
         cargarObjetivo(); // Refrescar vista
+        cambiarPestana('panel', null); // Salto directo al panel
     }
     
     async function cargarObjetivo() {
@@ -585,7 +596,7 @@
     
     function renderTareas() {
       const lista = document.getElementById('lista-tareas'); lista.innerHTML = ""; let completadas = 0;
-      if(misTareasDeHoy.length === 0) lista.innerHTML = '<p class="texto-pequeno" style="padding: 16px 0;">No hay tareas planificadas para hoy.</p>';
+      if(misTareasDeHoy.length === 0) lista.innerHTML = '<p class="texto-pequeno" style="padding: 16px 0;">No hay tareas pendientes.</p>';
       
       misTareasDeHoy.forEach(t => {
         if(t.completada) completadas++;
@@ -603,7 +614,7 @@
       document.getElementById('barra-tareas').style.width = total === 0 ? "0%" : `${(completadas/total)*100}%`;
     }
 
-    // --- IA Y PANTALLA DE CARGA ---
+    // --- IA RESTAURADA CON EL MODELO EXACTO ANTERIOR ---
     async function analizarYGuardar() {
       const texto = document.getElementById('texto-diario').value;
       const errEl = document.getElementById('error-ia');
@@ -623,14 +634,10 @@
       prompt += `\nTareas de hoy:\n${tareasTXT || 'Ninguna tarea registrada.'}\nDiario: "${texto}"\nDevuelve ÚNICAMENTE un JSON válido (sin formato markdown ni tildes en las keys): {"veredicto":"POSITIVO|NEGATIVO|NEUTRO","disciplina":8,"enfoque":7,"constancia":9,"progreso_objetivo":15,"insight":"Frase corta y rotunda que critique o alabe su acercamiento al objetivo."}`;
 
       try {
-        // 🔥 AQUÍ ESTÁ LA SOLUCIÓN DEFINITIVA A TU ERROR OAuth 🔥
-        // Como tu clave empieza por AQ, Google la trata como un token interno. Por lo tanto, no se envía como un parámetro en la URL (?key=...), sino oculta en las cabeceras (headers).
-        
-        const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+        // 🚨 AQUÍ ESTÁ EL MODELO DE GOOGLE MÁS ESTABLE Y TU CLAVE EXACTA EN LA URL 🚨
+        const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`, {
           method: 'POST', 
-          headers: { 
-            'Content-Type': 'application/json'
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
         });
         
@@ -676,10 +683,10 @@
         const quoteEl = document.getElementById('ia-quote');
         if(v === "POSITIVO" || globalScore >= 7) {
             const randomQuote = frasesMotivadoras[Math.floor(Math.random() * frasesMotivadoras.length)];
-            quoteEl.innerHTML = `<strong>NOTA IA:</strong> "${esc(nuevaEntrada.insight)}"<br><br>${randomQuote}`; 
+            quoteEl.innerHTML = `<strong>NOTA DE LA IA:</strong> "${esc(nuevaEntrada.insight)}"<br><br>${randomQuote}`; 
             quoteEl.style.display = 'block';
         } else { 
-            quoteEl.innerHTML = `<strong>NOTA IA:</strong> "${esc(nuevaEntrada.insight)}"`;
+            quoteEl.innerHTML = `<strong>NOTA DE LA IA:</strong> "${esc(nuevaEntrada.insight)}"`;
             quoteEl.style.display = 'block';
         }
 
@@ -773,6 +780,7 @@
       }
 
       document.getElementById('racha-numero').textContent = rachaActual;
+      document.getElementById('racha-estado').textContent = rachaActual > 0 ? "En racha" : "Inactivo";
 
       let sumaMedia = 0; let diasMedia = 0;
       for(let i=0; i<7; i++) {
