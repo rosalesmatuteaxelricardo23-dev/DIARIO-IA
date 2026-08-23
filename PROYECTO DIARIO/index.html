@@ -2,11 +2,11 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Pulso | Tu día, con intención</title>
-    <!-- Fuentes Google: DM Sans (Interfaz) y Fraunces (Títulos/Editorial) -->
+    <title>PULSO | Alto Rendimiento</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,600&display=swap" rel="stylesheet">
+    <!-- Usamos Inter con pesos muy gruesos para dar ese look Netflix/DAZN -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -14,297 +14,285 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     
     <style>
-      /* --- PALETA BIENESTAR PREMIUM --- */
+      /* --- PALETA NETFLIX / DAZN --- */
       :root {
-        --bg-color: #F8F7F4;       /* Crema muy claro */
-        --text-dark: #182033;      /* Azul noche */
-        --text-muted: #7A849C;     /* Gris azulado suave */
-        --primary: #625BF6;        /* Lavanda / Índigo */
-        --primary-hover: #5048E5;
-        --coral: #FF7A59;          /* Acento avisos/negativo */
-        --green: #46B68A;          /* Progreso/positivo */
-        --yellow: #F4C261;         /* Neutro */
-        --card-bg: #FFFFFF;
-        --border: #E8E6E1;
-        --shadow: 0 4px 24px rgba(24, 32, 51, 0.04);
-        --shadow-hover: 0 12px 32px rgba(24, 32, 51, 0.08);
-        --radius-card: 24px;
-        --radius-btn: 14px;
+        --bg-color: #000000;       /* Negro Puro */
+        --panel-bg: #141414;       /* Gris Oscuro (Tarjetas) */
+        --panel-hover: #1f1f1f;
+        --accent: #E50914;         /* Rojo Netflix */
+        --accent-hover: #F40612;
+        --text-main: #FFFFFF;
+        --text-muted: #808080;
+        --border: #2B2B2B;
+        --radius: 6px;             /* Bordes más rectos, estilo TV */
       }
       
       body {
-        font-family: 'DM Sans', sans-serif; 
+        font-family: 'Inter', sans-serif; 
         background-color: var(--bg-color);
-        color: var(--text-dark);
+        color: var(--text-main);
         margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh;
         -webkit-font-smoothing: antialiased;
       }
       
-      h1, h2, h3, .serif { font-family: 'Fraunces', serif; font-weight: 400; }
-
       /* HEADER & NAV */
       header {
         width: 100%; display: flex; justify-content: space-between; align-items: center;
-        padding: 20px 5vw; box-sizing: border-box; 
-        background: rgba(248, 247, 244, 0.85); backdrop-filter: blur(12px); 
+        padding: 20px 4vw; box-sizing: border-box; 
+        background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%);
         position: sticky; top: 0; z-index: 100;
-        border-bottom: 1px solid rgba(24, 32, 51, 0.03);
       }
-      .brand { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 600; color: var(--primary); display: flex; align-items: center; gap: 8px;}
-      .brand-dot { width: 8px; height: 8px; background: var(--coral); border-radius: 50%; }
+      .brand { font-size: 32px; font-weight: 900; color: var(--accent); text-transform: uppercase; letter-spacing: 2px;}
 
-      nav { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+      nav { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; }
       .nav-btn { 
-        background: transparent; border: none; color: var(--text-muted); 
-        font-size: 14px; font-weight: 500; font-family: 'DM Sans', sans-serif;
-        cursor: pointer; padding: 10px 18px; border-radius: 20px; transition: all 0.2s ease; 
+        background: transparent; border: none; color: #E5E5E5; 
+        font-size: 14px; font-weight: 500;
+        cursor: pointer; padding: 10px 5px; transition: 0.2s ease; 
       }
-      .nav-btn:hover { color: var(--text-dark); background: rgba(24, 32, 51, 0.03); }
-      .nav-btn.activo { color: var(--primary); background: rgba(98, 91, 246, 0.08); font-weight: 700; }
+      .nav-btn:hover { color: white; }
+      .nav-btn.activo { font-weight: 700; color: white; cursor: default; }
       
       /* ESTRUCTURA PANTALLAS */
-      #pantalla-auth { display: flex; justify-content: center; align-items: center; height: 100vh; width: 100%; position: relative; overflow: hidden;}
-      
-      /* Fondo suave Login */
-      #pantalla-auth::before {
-          content: ''; position: absolute; width: 60vw; height: 60vw;
-          background: radial-gradient(circle, rgba(98,91,246,0.1) 0%, rgba(248,247,244,0) 70%);
-          top: -20%; left: -10%; z-index: -1;
+      #pantalla-auth { 
+        display: flex; justify-content: center; align-items: center; 
+        height: 100vh; width: 100%; 
+        background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
       }
       
       #app-principal { display: none; width: 100%; flex-direction: column; align-items: center; }
-      .pestana { display: none; width: 92%; max-width: 900px; margin-top: 40px; flex-direction: column; gap: 24px; animation: softFade 0.5s ease; padding-bottom: 60px;}
+      .pestana { display: none; width: 92%; max-width: 1000px; margin-top: 20px; flex-direction: column; gap: 20px; animation: fadeIn 0.4s ease; padding-bottom: 60px;}
       .pestana.activa { display: flex; }
-      @keyframes softFade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+      @keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
 
-      /* TARJETAS PREMIUM */
+      /* PANELES CINEMATOGRÁFICOS */
       .card { 
-        background: var(--card-bg); padding: 32px; border-radius: var(--radius-card); 
-        box-shadow: var(--shadow); position: relative; transition: box-shadow 0.3s ease;
+        background: var(--panel-bg); padding: 30px; border-radius: var(--radius); 
+        border: 1px solid transparent; transition: 0.2s;
       }
-      .card:hover { box-shadow: var(--shadow-hover); }
+      .card:hover { border-color: var(--border); background: var(--panel-hover); }
       
-      .card-title { font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 20px; display: block;}
+      .card-title { font-size: 14px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; display: block;}
       
-      /* DASHBOARD GRID */
-      .dash-hero { background: var(--primary); color: white; border-radius: var(--radius-card); padding: 40px 32px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 12px 30px rgba(98, 91, 246, 0.2); }
-      .dash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px; }
+      /* HERO (Dashboard) */
+      .dash-hero { 
+        background: linear-gradient(135deg, #1f1f1f 0%, #0a0a0a 100%); 
+        border: 1px solid var(--border); border-left: 4px solid var(--accent);
+        border-radius: var(--radius); padding: 40px 30px; display: flex; justify-content: space-between; align-items: center; 
+      }
+      .dash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
       
-      /* COMPONENTES */
-      .numero-gigante { font-family: 'Fraunces', serif; font-size: 42px; font-weight: 400; color: var(--text-dark); margin: 5px 0; }
-      .texto-pequeno { font-size: 14px; color: var(--text-muted); }
+      .numero-gigante { font-size: 48px; font-weight: 900; color: white; margin: 5px 0; line-height: 1;}
+      .texto-pequeno { font-size: 13px; color: var(--text-muted); font-weight: 500;}
       
-      .barra-progreso { width: 100%; height: 8px; background: var(--bg-color); border-radius: 4px; margin-top: 15px; overflow: hidden; }
-      .progreso-fill { height: 100%; background: var(--green); transition: width 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); border-radius: 4px;}
+      .barra-progreso { width: 100%; height: 6px; background: #333; border-radius: 3px; margin-top: 15px; overflow: hidden; }
+      .progreso-fill { height: 100%; background: var(--accent); transition: width 0.8s ease; }
 
       /* INPUTS Y BOTONES */
       textarea, input[type="text"], input[type="email"], input[type="password"] { 
-          background: #FFFFFF; color: var(--text-dark); border: 1px solid var(--border); 
-          border-radius: 16px; padding: 20px; font-size: 16px; font-family: 'DM Sans', sans-serif; width: 100%; box-sizing: border-box; 
-          transition: 0.3s; box-shadow: inset 0 2px 4px rgba(24,32,51,0.01);
+          background: #333; color: white; border: 1px solid transparent; 
+          border-radius: var(--radius); padding: 18px; font-size: 16px; width: 100%; box-sizing: border-box; 
+          transition: 0.2s;
       }
-      textarea { min-height: 160px; resize: vertical; line-height: 1.6; }
-      textarea::placeholder { color: #A0AABF; font-weight: 400; }
-      textarea:focus, input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 4px rgba(98,91,246,0.1); }
+      textarea { min-height: 180px; resize: vertical; line-height: 1.5; }
+      textarea::placeholder, input::placeholder { color: #8c8c8c; }
+      textarea:focus, input:focus { outline: none; background: #404040; border-color: #555; }
       
-      button.btn-principal { 
-        background: var(--primary); color: white; border: none; padding: 16px 24px; 
-        font-size: 16px; font-weight: 500; font-family: 'DM Sans', sans-serif;
-        border-radius: var(--radius-btn); cursor: pointer; width: 100%; transition: all 0.2s ease; 
-        display: flex; justify-content: center; align-items: center; gap: 8px;
+      button { font-family: 'Inter', sans-serif; }
+      .btn-principal { 
+        background: var(--accent); color: white; border: none; padding: 16px; 
+        font-size: 16px; font-weight: 700; border-radius: var(--radius); cursor: pointer; width: 100%; transition: 0.2s;
       }
-      button.btn-principal:hover:not(:disabled) { background: var(--primary-hover); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(98,91,246,0.25); }
-      button.btn-principal:disabled { background: #D1D5DB; color: #9CA3AF; cursor: not-allowed; box-shadow: none; }
-      button.btn-secundario { background: transparent; color: var(--text-dark); border: 1px solid var(--border); }
-      button.btn-secundario:hover { background: var(--bg-color); border-color: #D1D5DB; }
+      .btn-principal:hover:not(:disabled) { background: var(--accent-hover); }
+      .btn-principal:disabled { background: #333; color: #666; cursor: not-allowed; }
+      
+      .btn-secundario { background: rgba(255,255,255,0.1); color: white; border: none; padding: 16px; border-radius: var(--radius); cursor: pointer; font-weight: 700; width: 100%; transition: 0.2s;}
+      .btn-secundario:hover { background: rgba(255,255,255,0.2); }
 
       /* TAREAS */
-      .tarea-item { display:flex; justify-content:space-between; background:var(--card-bg); padding:16px 0; border-bottom: 1px solid var(--border); align-items:center; transition: 0.2s;}
+      .tarea-item { display:flex; justify-content:space-between; background:var(--panel-bg); padding:18px 20px; border-bottom: 1px solid var(--border); align-items:center;}
       .tarea-item:last-child { border-bottom: none; }
-      .check-box { width:24px; height:24px; border-radius:8px; border:2px solid var(--border); display:flex; align-items:center; justify-content:center; color:white; font-weight:bold; font-size:14px; transition: 0.2s; background: white;}
-      .tarea-item.checked .check-box { background: var(--primary); border-color: var(--primary); }
+      .check-box { width:24px; height:24px; border-radius:4px; border:2px solid #666; display:flex; align-items:center; justify-content:center; color:white; font-weight:bold; font-size:14px; transition: 0.2s; background: transparent;}
+      .tarea-item.checked .check-box { background: var(--accent); border-color: var(--accent); }
       
       /* CALENDARIO */
-      .calendario-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin-top: 20px; }
-      .dia-cal { aspect-ratio: 1; border-radius: 50%; background: var(--bg-color); display: flex; align-items: center; justify-content: center; font-size: 13px; color: var(--text-dark); cursor: help; transition: 0.2s;}
-      .dia-cal:hover:not(:empty) { transform: scale(1.1); background: var(--border); }
-      .dia-cal.int-3 { background: rgba(70, 182, 138, 1); color: white; font-weight: bold; }
-      .dia-cal.int-2 { background: rgba(70, 182, 138, 0.6); color: white; }
-      .dia-cal.int-1 { background: rgba(70, 182, 138, 0.2); color: var(--text-dark); }
-      .dia-cal.neg { background: rgba(255, 122, 89, 0.2); color: var(--coral); }
-      .dia-hoy { border: 2px solid var(--primary) !important; font-weight: bold; }
+      .calendario-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-top: 15px; }
+      .dia-cal { aspect-ratio: 1; border-radius: var(--radius); background: #222; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 500; color: #aaa; cursor: help; transition: 0.2s;}
+      .dia-cal:hover:not(:empty) { background: #444; color: white; transform: scale(1.05); }
+      .dia-cal.int-3 { background: #E50914; color: white; font-weight: bold; } /* Rojo fuerte */
+      .dia-cal.int-2 { background: rgba(229, 9, 20, 0.6); color: white; }
+      .dia-cal.int-1 { background: rgba(229, 9, 20, 0.3); color: white; }
+      .dia-cal.neg { background: #404040; color: #666; text-decoration: line-through; } /* Días malos en gris/tachado */
+      .dia-hoy { border: 2px solid white !important; font-weight: bold; color: white; }
 
       /* HISTORIAL */
-      .filtro-historial { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap;}
-      .btn-filtro { background: white; color: var(--text-muted); border: 1px solid var(--border); padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 14px; font-weight:500; transition: 0.2s; }
-      .btn-filtro.activo { background: var(--text-dark); color: white; border-color: var(--text-dark); }
+      .filtro-historial { display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap;}
+      .btn-filtro { background: transparent; color: var(--text-muted); border: 1px solid var(--text-muted); padding: 8px 18px; border-radius: 20px; cursor: pointer; font-size: 14px; font-weight:600; transition: 0.2s; }
+      .btn-filtro.activo { background: white; color: black; border-color: white; }
+      .btn-filtro:hover:not(.activo) { border-color: white; color: white; }
       
-      .item-historial { background: var(--card-bg); padding: 24px; border-radius: 16px; border: 1px solid var(--border); transition: 0.2s; display:flex; flex-direction:column; gap:12px; margin-bottom:16px;}
-      .item-historial:hover { box-shadow: var(--shadow); border-color: #D1D5DB; }
+      .item-historial { background: var(--panel-bg); padding: 25px; border-radius: var(--radius); border-top: 2px solid #333; transition: 0.2s; display:flex; flex-direction:column; gap:15px; margin-bottom:20px;}
+      .item-historial.POSITIVO { border-top-color: var(--accent); }
+      .item-historial.NEGATIVO { border-top-color: #666; opacity: 0.8; }
       
-      .tag-estado { display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:12px; font-size:12px; font-weight:600;}
-      .tag-POS { background: rgba(70, 182, 138, 0.1); color: var(--green); }
-      .tag-NEG { background: rgba(255, 122, 89, 0.1); color: var(--coral); }
-      .tag-NEU { background: rgba(244, 194, 97, 0.1); color: #D49D2B; }
-
-      .insight-text { font-family: 'Fraunces', serif; font-size: 18px; font-style: italic; color: var(--primary); line-height: 1.4; }
-
       /* RESULTADO IA */
-      #diario-zona-resultado { display: none; animation: softFade 0.5s ease; flex-direction: column; gap: 20px; align-items:center; text-align:center;}
-      .score-circle { width: 120px; height: 120px; border-radius: 50%; background: white; box-shadow: var(--shadow); display:flex; flex-direction:column; justify-content:center; align-items:center; margin: 0 auto;}
-      .score-circle .num { font-family: 'Fraunces', serif; font-size: 42px; color: var(--primary); line-height:1;}
+      #diario-zona-resultado { display: none; animation: fadeIn 0.5s ease; flex-direction: column; gap: 20px; align-items:center; text-align:center;}
       
+      /* LOGO GOOGLE SVG */
+      .google-logo { width: 18px; height: 18px; margin-right: 8px; }
+
       @media(max-width: 600px) {
         header { padding: 15px 5vw; flex-direction:column; gap:15px; }
         .card { padding: 20px; }
-        .dash-hero { padding: 24px 20px; flex-direction:column; text-align:center; gap:20px;}
-        .numero-gigante { font-size: 32px; }
+        .dash-hero { padding: 30px 20px; flex-direction:column; text-align:center; gap:20px;}
       }
     </style>
 </head>
 <body>
 
-  <!-- AUTH: LIMPIO Y ASPIRACIONAL -->
+  <!-- AUTH: CINE / STREAMING -->
   <div id="pantalla-auth">
-    <div style="text-align: center; width: 90%; max-width: 380px;">
-      <div class="brand" style="justify-content:center; font-size:32px; margin-bottom: 8px;">Pulso<div class="brand-dot"></div></div>
-      <h2 style="margin-top:0; color:var(--text-dark); font-size:24px; margin-bottom:32px; line-height:1.2;">Construye días de los que estés orgulloso.</h2>
+    <div style="text-align: center; width: 90%; max-width: 360px;">
+      <div class="brand" style="margin-bottom: 30px;">PULSO</div>
       
-      <div class="card" style="padding: 32px 24px;">
-          <input type="email" id="auth-email" placeholder="Tu correo electrónico" style="margin-bottom:12px;">
-          <input type="password" id="auth-password" placeholder="Tu contraseña" style="margin-bottom:24px;">
+      <div style="text-align: left; background: rgba(0,0,0,0.7); padding: 30px; border-radius: var(--radius); border: 1px solid #333;">
+          <h2 style="margin-top:0; color:white; font-size:24px; font-weight:700; margin-bottom:25px;">Iniciar sesión</h2>
           
-          <div style="display: flex; flex-direction:column; gap:12px; margin-bottom:20px;">
-            <button class="btn-principal" onclick="loginEmail()">Iniciar sesión</button>
-            <button class="btn-principal btn-secundario" onclick="registrarEmail()">Crear cuenta</button>
+          <input type="email" id="auth-email" placeholder="Email" style="margin-bottom:15px; background: #333;">
+          <input type="password" id="auth-password" placeholder="Contraseña" style="margin-bottom:25px; background: #333;">
+          
+          <button class="btn-principal" onclick="loginEmail()" style="margin-bottom:15px;">Entrar</button>
+          <button class="btn-secundario" onclick="registrarEmail()" style="margin-bottom:15px;">Crear cuenta</button>
+          
+          <!-- BOTÓN GOOGLE ARREGLADO CON SVG INLINE -->
+          <button class="btn-secundario" style="background: white; color: black; display: flex; justify-content: center; align-items: center;" onclick="loginGoogle()">
+              <svg class="google-logo" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                  <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                  <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                  <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+              </svg>
+              Google
+          </button>
+
+          <!-- MODO INVITADO AHORA ES UN BOTÓN CLARO Y GRANDE -->
+          <div style="margin-top: 25px; text-align: center;">
+            <p style="color: #737373; font-size: 13px; margin-bottom: 10px;">¿Quieres probar sin registrarte?</p>
+            <button class="btn-secundario" style="background: #222;" onclick="loginInvitado()">Modo Invitado</button>
           </div>
           
-          <button class="btn-principal btn-secundario" style="background: white;" onclick="loginGoogle()">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" width="18" alt="Google"> Continuar con Google
-          </button>
+          <p id="auth-error" style="color: var(--accent); font-size: 14px; margin-top:15px; text-align:center;"></p>
       </div>
-      
-      <div style="margin-top: 24px;">
-        <button onclick="loginInvitado()" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-family:'DM Sans'; text-decoration:underline; font-size:14px;">Entrar sin registro (Modo Demo)</button>
-      </div>
-      <p id="auth-error" style="color: var(--coral); font-size: 14px; margin-top:15px;"></p>
     </div>
   </div>
 
   <div id="app-principal">
     <header>
-      <div class="brand">Pulso<div class="brand-dot"></div></div>
+      <div class="brand">PULSO</div>
       <nav>
         <button class="nav-btn activo" onclick="cambiarPestana('diario', this)">Diario</button>
         <button class="nav-btn" onclick="cambiarPestana('panel', this)">Panel</button>
         <button class="nav-btn" onclick="cambiarPestana('tareas', this)">Tareas</button>
         <button class="nav-btn" onclick="cambiarPestana('historial', this)">Historial</button>
-        <button class="nav-btn" onclick="cerrarSesion()" style="color: var(--coral);">Salir</button>
+        <button class="nav-btn" onclick="cerrarSesion()" style="color: var(--text-muted); font-weight:bold;">Salir</button>
       </nav>
     </header>
 
-    <!-- 1. DIARIO: EDITORIAL Y HUMANO -->
+    <!-- 1. DIARIO -->
     <div id="diario" class="pestana activa">
       <div style="max-width: 650px; margin: 0 auto; width: 100%;">
         
-        <div style="margin-bottom: 32px;">
-          <div id="fecha-diario" style="color: var(--text-muted); font-weight: 500; font-size: 14px; margin-bottom: 8px;"></div>
-          <h2 class="serif" style="margin: 0; font-size: 36px; color: var(--text-dark);">¿Cómo ha ido tu día?</h2>
+        <div style="margin-bottom: 25px;">
+          <h2 style="margin: 0; font-size: 32px; font-weight: 900; text-transform: uppercase;">TU DÍA. TU TEMPORADA.</h2>
+          <div id="fecha-diario" style="color: var(--text-muted); font-weight: 500; font-size: 14px; margin-top: 5px;"></div>
         </div>
 
         <div id="diario-zona-input" class="card">
-          <textarea id="texto-diario" maxlength="2000" oninput="actualizarContador()" placeholder="Escribe aquí. Concéntrate en tus rutinas, tus logros o lo que podrías mejorar mañana..."></textarea>
-          <div style="display: flex; justify-content: flex-end; margin-top: 12px; margin-bottom: 24px;"><span id="contador-chars" class="texto-pequeno">0 / 2.000</span></div>
-          <button id="btn-guardar" class="btn-principal" onclick="analizarYGuardar()">Analizar mi día</button>
-          <p id="error-ia" style="color:var(--coral); text-align:center; font-size:14px; margin-top:12px;"></p>
+          <textarea id="texto-diario" maxlength="2000" oninput="actualizarContador()" placeholder="Reporta aquí. Entrenamientos, estudio, enfoque. ¿Qué hiciste hoy?"></textarea>
+          <div style="display: flex; justify-content: flex-end; margin-top: 10px; margin-bottom: 20px;"><span id="contador-chars" class="texto-pequeno">0 / 2.000</span></div>
+          <button id="btn-guardar" class="btn-principal" onclick="analizarYGuardar()">PROCESAR DATOS</button>
+          <p id="error-ia" style="color:var(--accent); text-align:center; font-size:14px; margin-top:12px;"></p>
         </div>
 
-        <!-- RESULTADO IA ESTILO HEADSPACE -->
+        <!-- RESULTADO IA -->
         <div id="diario-zona-resultado" class="card" style="padding: 40px 20px;">
-          <h3 class="serif" style="font-size:24px; color:var(--text-dark); margin-bottom:20px; margin-top:0;">Resumen de hoy</h3>
-          <div class="score-circle">
-             <span class="num" id="ia-puntuacion-global">0.0</span>
-             <span style="font-size:12px; color:var(--text-muted); font-weight:600; letter-spacing:1px; text-transform:uppercase;">Puntuación</span>
-          </div>
+          <h3 style="font-size:18px; color:var(--text-muted); margin-bottom:10px; margin-top:0; text-transform:uppercase;">Rendimiento</h3>
+          <div style="font-size: 64px; font-weight: 900; color: white; line-height: 1;" id="ia-puntuacion-global">0.0</div>
           
-          <div style="margin: 24px 0; max-width:400px;">
-             <p id="ia-insight" class="insight-text">"..."</p>
+          <div style="margin: 25px 0; max-width:400px; padding: 20px; background: #1a1a1a; border-radius: var(--radius); border-left: 4px solid var(--accent);">
+             <p id="ia-insight" style="margin:0; font-size: 16px; font-weight: 500; font-style: italic;">"..."</p>
           </div>
 
-          <div style="display: flex; gap: 20px; justify-content: center; width: 100%; max-width: 400px; border-top: 1px solid var(--border); padding-top: 24px; margin-bottom: 24px;">
-            <div style="text-align:center;"><div style="font-size:12px; color:var(--text-muted);">Disciplina</div><div style="font-weight:700; font-size:18px;" id="ia-disciplina">-</div></div>
-            <div style="text-align:center;"><div style="font-size:12px; color:var(--text-muted);">Enfoque</div><div style="font-weight:700; font-size:18px;" id="ia-enfoque">-</div></div>
-            <div style="text-align:center;"><div style="font-size:12px; color:var(--text-muted);">Constancia</div><div style="font-weight:700; font-size:18px;" id="ia-constancia">-</div></div>
+          <div style="display: flex; gap: 30px; justify-content: center; width: 100%; max-width: 400px; margin-bottom: 30px;">
+            <div style="text-align:center;"><div style="font-size:12px; color:var(--text-muted); text-transform:uppercase;">Disciplina</div><div style="font-weight:900; font-size:24px;" id="ia-disciplina">-</div></div>
+            <div style="text-align:center;"><div style="font-size:12px; color:var(--text-muted); text-transform:uppercase;">Enfoque</div><div style="font-weight:900; font-size:24px;" id="ia-enfoque">-</div></div>
+            <div style="text-align:center;"><div style="font-size:12px; color:var(--text-muted); text-transform:uppercase;">Constancia</div><div style="font-weight:900; font-size:24px;" id="ia-constancia">-</div></div>
           </div>
           
-          <button class="btn-principal btn-secundario" style="width: auto;" onclick="irAlPanelDesdeResultado()">Ver panel general</button>
+          <button class="btn-secundario" style="width: auto; padding: 12px 30px;" onclick="irAlPanelDesdeResultado()">Ir al Panel Central</button>
         </div>
       </div>
     </div>
 
-    <!-- 2. PANEL (DASHBOARD) CON HERO CARD -->
+    <!-- 2. PANEL (DASHBOARD) -->
     <div id="panel" class="pestana">
-      
-      <!-- Tarjeta Protagonista -->
       <div class="dash-hero">
           <div>
-              <div style="font-weight:500; opacity:0.9; margin-bottom:8px; font-size:14px; letter-spacing:1px; text-transform:uppercase;">Tu progreso semanal</div>
-              <h2 class="serif" style="margin:0; font-size:32px; line-height:1.2;" id="hero-msg">Construyendo constancia.</h2>
+              <div style="font-weight:700; color:var(--text-muted); margin-bottom:10px; font-size:12px; letter-spacing:2px; text-transform:uppercase;">Rendimiento Semanal</div>
+              <h2 style="margin:0; font-size:36px; font-weight:900; text-transform:uppercase;" id="hero-msg">ANALIZANDO...</h2>
           </div>
           <div style="text-align:right;">
-              <div style="font-size:48px; font-family:'Fraunces', serif; line-height:1;" id="hero-score">--</div>
-              <div style="opacity:0.8; font-size:14px;">Nota media</div>
+              <div style="font-size:56px; font-weight:900; color:white; line-height:1;" id="hero-score">--</div>
+              <div style="color:var(--text-muted); font-size:14px; font-weight:500;">Puntos media</div>
           </div>
       </div>
 
       <div class="dash-grid">
         <div class="card">
-          <span class="card-title">Hábitos de hoy</span>
+          <span class="card-title">Plan de Acción</span>
           <div id="tareas-completadas" class="numero-gigante">0 / 0</div>
-          <div class="texto-pequeno">Tareas completadas</div>
+          <div class="texto-pequeno">Tareas hoy</div>
           <div class="barra-progreso"><div id="barra-tareas" class="progreso-fill" style="width: 0%;"></div></div>
         </div>
-        
         <div class="card">
           <span class="card-title">Constancia</span>
           <div id="racha-numero" class="numero-gigante">0</div>
-          <div class="texto-pequeno" id="racha-estado">Días seguidos</div>
+          <div class="texto-pequeno" id="racha-estado">Días en racha</div>
         </div>
       </div>
 
       <div class="card">
-        <span class="card-title">Evolución de la semana</span>
+        <span class="card-title">Métricas de la semana</span>
         <div style="height: 250px; width: 100%;"><canvas id="graficaEvolucion"></canvas></div>
       </div>
 
-      <div class="card" style="max-width: 400px; margin: 0 auto; width:100%;">
-        <span class="card-title">Tu mes</span>
+      <div class="card" style="max-width: 450px; margin: 0 auto; width:100%;">
+        <span class="card-title">Mapa de Actividad</span>
         <div class="calendario-grid" id="calendario-grid"></div>
       </div>
     </div>
 
-    <!-- 3. TAREAS (LISTA LIMPIA) -->
+    <!-- 3. TAREAS -->
     <div id="tareas" class="pestana">
-      <div class="card" style="max-width: 600px; margin: 0 auto; width: 100%; padding: 40px;">
-        <h3 class="serif" style="font-size: 28px; margin-top:0; margin-bottom: 8px;">Intención del día</h3>
-        <p class="texto-pequeno" style="margin-bottom: 32px;">Añade tus tareas clave. Se cruzarán con tu análisis diario.</p>
+      <div class="card" style="max-width: 600px; margin: 0 auto; width: 100%; padding: 40px 30px;">
+        <h3 style="font-size: 24px; font-weight: 900; margin-top:0; margin-bottom: 10px; text-transform:uppercase;">Objetivos de hoy</h3>
+        <p class="texto-pequeno" style="margin-bottom: 30px;">Registra tu entrenamiento, estudio y obligaciones.</p>
         
-        <div style="display:flex; gap:12px; margin-bottom:32px;">
-           <input type="text" id="input-tarea" placeholder="Ej: Leer 20 páginas..." style="padding:16px; border-radius:12px; background:var(--bg-color); border:none;" onkeypress="if(event.key === 'Enter') agregarTarea()">
-           <button class="btn-principal" style="width:auto; padding:0 24px; border-radius:12px;" onclick="agregarTarea()">Añadir</button>
+        <div style="display:flex; gap:10px; margin-bottom:30px;">
+           <input type="text" id="input-tarea" placeholder="Añadir objetivo..." style="padding:16px; background:#1a1a1a;" onkeypress="if(event.key === 'Enter') agregarTarea()">
+           <button class="btn-secundario" style="width:auto; padding:0 20px; font-size:24px;" onclick="agregarTarea()">+</button>
         </div>
         <div id="lista-tareas" style="display:flex; flex-direction:column;"></div>
       </div>
     </div>
 
-    <!-- 4. HISTORIAL (TARJETAS EDITORIALES) -->
+    <!-- 4. HISTORIAL -->
     <div id="historial" class="pestana">
       <div style="max-width: 700px; margin: 0 auto; width:100%;">
         <div class="filtro-historial">
-          <button class="btn-filtro activo" onclick="aplicarFiltro('ALL', this)">Todos los días</button>
-          <button class="btn-filtro" onclick="aplicarFiltro('POSITIVO', this)">Días Positivos</button>
-          <button class="btn-filtro" onclick="aplicarFiltro('NEUTRO', this)">Días Neutros</button>
-          <button class="btn-filtro" onclick="aplicarFiltro('NEGATIVO', this)">Días para mejorar</button>
+          <button class="btn-filtro activo" onclick="aplicarFiltro('ALL', this)">Todo</button>
+          <button class="btn-filtro" onclick="aplicarFiltro('POSITIVO', this)">Destacados</button>
+          <button class="btn-filtro" onclick="aplicarFiltro('NEGATIVO', this)">Mejorables</button>
         </div>
         <div id="lista-historial" class="lista-historial"></div>
       </div>
@@ -312,16 +300,10 @@
   </div>
 
   <script>
-    // --- PREVENCIÓN XSS ---
     function esc(str) { if(!str) return ""; const div = document.createElement('div'); div.appendChild(document.createTextNode(str)); return div.innerHTML; }
-
-    // --- FECHA LOCAL ---
-    function getHoyISO() {
-      const d = new Date();
-      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-    }
+    function getHoyISO() { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; }
     
-    // --- FIREBASE SETUP ---
+    // FIREBASE SETUP
     const firebaseConfig = {
       apiKey: "AIzaSyAfzGeUy1uI98YrDpFUrQbSWDN1ag9IrJA",
       authDomain: "diario-inteligente-d329b.firebaseapp.com",
@@ -331,23 +313,20 @@
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth(); const db = firebase.firestore();
     
-    // API KEY TEMPORAL EN FRONTEND (Próximo paso: Netlify Backend)
+    // API KEY TEMPORAL EN FRONTEND
     const GEMINI_API_KEY = 'AQ.Ab8RN6LOhA4s1Dlsrj7qzb2MNdcYM6BAiZXTTPM2fEsKehQemg';
 
-    let usuarioActual = null; let chartLine = null; 
-    let misTareasDeHoy = []; let historialGlobal = []; 
+    let usuarioActual = null; let chartLine = null; let misTareasDeHoy = []; let historialGlobal = []; 
 
-    // Configuración Inicial UI
     const opcionesFecha = { weekday: 'long', day: 'numeric', month: 'long' };
     let fechaStr = new Date().toLocaleDateString('es-ES', opcionesFecha);
-    fechaStr = fechaStr.charAt(0).toUpperCase() + fechaStr.slice(1); // Capitalizar
-    document.getElementById('fecha-diario').textContent = fechaStr;
+    document.getElementById('fecha-diario').textContent = fechaStr.toUpperCase();
     
     function actualizarContador() { 
         const val = document.getElementById('texto-diario').value.length;
         const el = document.getElementById('contador-chars');
         el.textContent = `${val} / 2.000`;
-        el.style.color = val >= 1850 ? "var(--coral)" : "var(--text-muted)";
+        el.style.color = val >= 1850 ? "var(--accent)" : "var(--text-muted)";
     }
 
     function cambiarPestana(id, btn) { 
@@ -358,7 +337,7 @@
       window.scrollTo(0,0);
     }
 
-    // --- AUTH ---
+    // AUTH
     auth.onAuthStateChanged((user) => {
       if (user) { 
         usuarioActual = user; 
@@ -373,13 +352,13 @@
     const getEl = (id) => document.getElementById(id).value;
     const showErr = (msg) => document.getElementById('auth-error').textContent = msg;
     
-    async function loginEmail() { try { await auth.signInWithEmailAndPassword(getEl('auth-email'), getEl('auth-password')); } catch (e) { showErr(e.message); } }
-    async function registrarEmail() { try { await auth.createUserWithEmailAndPassword(getEl('auth-email'), getEl('auth-password')); } catch (e) { showErr(e.message); } }
-    async function loginGoogle() { try { await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); } catch (e) { showErr(e.message); } }
-    async function loginInvitado() { try { await auth.signInAnonymously(); } catch (e) { showErr(e.message); } }
+    async function loginEmail() { try { await auth.signInWithEmailAndPassword(getEl('auth-email'), getEl('auth-password')); } catch (e) { showErr("Credenciales incorrectas."); } }
+    async function registrarEmail() { try { await auth.createUserWithEmailAndPassword(getEl('auth-email'), getEl('auth-password')); } catch (e) { showErr("Error al crear cuenta. Prueba otra contraseña."); } }
+    async function loginGoogle() { try { await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); } catch (e) { showErr("Error al conectar con Google."); } }
+    async function loginInvitado() { try { await auth.signInAnonymously(); } catch (e) { showErr("Error al entrar como invitado."); } }
     function cerrarSesion() { auth.signOut(); }
 
-    // --- TAREAS (UI LIMPIA) ---
+    // TAREAS
     async function cargarTareasNube() {
       if(!usuarioActual) return;
       const snapshot = await db.collection('usuarios').doc(usuarioActual.uid).collection('tareas').where('fechaISO', '==', getHoyISO()).get();
@@ -407,17 +386,17 @@
     
     function renderTareas() {
       const lista = document.getElementById('lista-tareas'); lista.innerHTML = ""; let completadas = 0;
-      if(misTareasDeHoy.length === 0) lista.innerHTML = '<p class="texto-pequeno">No hay tareas planificadas para hoy.</p>';
+      if(misTareasDeHoy.length === 0) lista.innerHTML = '<p class="texto-pequeno">No hay objetivos fijados hoy.</p>';
       
       misTareasDeHoy.forEach(t => {
         if(t.completada) completadas++;
         lista.innerHTML += `
           <div class="tarea-item ${t.completada ? 'checked' : ''}">
-            <div style="display:flex; gap:16px; align-items:center; cursor:pointer; flex:1;" onclick="toggleTarea('${t.id}')">
+            <div style="display:flex; gap:15px; align-items:center; cursor:pointer; flex:1;" onclick="toggleTarea('${t.id}')">
               <div class="check-box">${t.completada ? '✓' : ''}</div>
-              <span style="${t.completada ? 'text-decoration:line-through; color:var(--text-muted);' : 'color:var(--text-dark); font-weight:500; font-size:16px;'}">${esc(t.texto)}</span>
+              <span style="${t.completada ? 'text-decoration:line-through; color:#666;' : 'color:white; font-weight:500; font-size:16px;'}">${esc(t.texto)}</span>
             </div>
-            <button onclick="eliminarTarea('${t.id}')" style="background:none; border:none; color:#D1D5DB; cursor:pointer; font-size:16px; padding:8px;">✕</button>
+            <button onclick="eliminarTarea('${t.id}')" style="background:none; border:none; color:#666; cursor:pointer; font-size:20px; padding:5px;">&times;</button>
           </div>`;
       });
       const total = misTareasDeHoy.length;
@@ -425,21 +404,21 @@
       document.getElementById('barra-tareas').style.width = total === 0 ? "0%" : `${(completadas/total)*100}%`;
     }
 
-    // --- CEREBRO IA ---
+    // IA
     async function analizarYGuardar() {
       const texto = document.getElementById('texto-diario').value;
       const btn = document.getElementById('btn-guardar');
       const errEl = document.getElementById('error-ia');
       if (!texto.trim()) return;
 
-      btn.disabled = true; btn.innerHTML = "Analizando tu día..."; errEl.textContent = "";
+      btn.disabled = true; btn.innerHTML = "EVALUANDO..."; errEl.textContent = "";
 
       const tareasTXT = misTareasDeHoy.map(t => (t.completada ? '☑ ' : '☐ ') + t.texto).join('\n');
-      const prompt = `Actúa como un coach empático pero objetivo. Analiza la disciplina cruzando el diario CON la lista de tareas.
+      const prompt = `Actúa como un analista de rendimiento. Analiza la disciplina cruzando el diario CON la lista de tareas.
 Tareas de hoy:
 ${tareasTXT || 'Ninguna tarea registrada.'}
 Diario: "${texto}"
-Devuelve ÚNICAMENTE un JSON válido: {"veredicto":"POSITIVO|NEGATIVO|NEUTRO","estado":"Tranquilo, Productivo, etc","disciplina":8,"enfoque":7,"constancia":9,"insight":"Una frase inspiradora o reflexión directa basada en sus datos (max 15 palabras)."}`;
+Devuelve ÚNICAMENTE un JSON válido: {"veredicto":"POSITIVO|NEGATIVO|NEUTRO","disciplina":8,"enfoque":7,"constancia":9,"insight":"Frase motivadora estilo película/deporte."}`;
 
       try {
         const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${GEMINI_API_KEY}`, {
@@ -449,4 +428,203 @@ Devuelve ÚNICAMENTE un JSON válido: {"veredicto":"POSITIVO|NEGATIVO|NEUTRO","e
         const data = await resp.json();
         if (!resp.ok) throw new Error(data.error.message);
 
-        let textoRaw = data.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/
+        let textoRaw = data.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '').trim();
+        const iaData = JSON.parse(textoRaw);
+        const v = iaData.veredicto; if (!['POSITIVO','NEGATIVO','NEUTRO'].includes(v)) throw new Error("Veredicto inválido");
+        
+        const clamp = (num) => Math.min(Math.max(parseInt(num) || 5, 1), 10);
+        const d = clamp(iaData.disciplina), e = clamp(iaData.enfoque), c = clamp(iaData.constancia);
+        const globalScore = parseFloat(((d + e + c) / 3).toFixed(1));
+
+        let f = new Date().toLocaleDateString('es-ES', {day:'numeric', month:'short'});
+        const nuevaEntrada = {
+          fechaISO: getHoyISO(),
+          fechaDisplay: f.toUpperCase(),
+          timestamp: Date.now(), 
+          veredicto: v, textoOriginal: texto,
+          disciplina: d, enfoque: e, constancia: c, puntuacionGlobal: globalScore,
+          insight: iaData.insight || "El trabajo duro da resultados."
+        };
+
+        await db.collection('usuarios').doc(usuarioActual.uid).collection('entradas').add(nuevaEntrada);
+
+        document.getElementById('ia-puntuacion-global').textContent = globalScore;
+        document.getElementById('ia-disciplina').textContent = d;
+        document.getElementById('ia-enfoque').textContent = e;
+        document.getElementById('ia-constancia').textContent = c;
+        document.getElementById('ia-insight').textContent = `"${esc(nuevaEntrada.insight)}"`;
+        
+        document.getElementById('diario-zona-input').style.display = 'none';
+        document.getElementById('diario-zona-resultado').style.display = 'flex';
+        document.getElementById('texto-diario').value = "";
+        actualizarContador(); cargarDatosNube();
+
+      } catch (err) { 
+        errEl.textContent = "Error al procesar. Inténtalo de nuevo."; btn.disabled = false; btn.innerHTML = "PROCESAR DATOS";
+      }
+    }
+
+    function irAlPanelDesdeResultado() {
+        document.getElementById('diario-zona-resultado').style.display = 'none';
+        document.getElementById('diario-zona-input').style.display = 'block';
+        document.getElementById('btn-guardar').innerHTML = "PROCESAR DATOS";
+        document.getElementById('btn-guardar').disabled = false;
+        cambiarPestana('panel', document.querySelectorAll('.nav-btn')[1]);
+    }
+
+    // PANEL Y CARGA GLOBAL
+    async function cargarDatosNube() {
+      if (!usuarioActual) return;
+      const snapshot = await db.collection('usuarios').doc(usuarioActual.uid).collection('entradas').orderBy('timestamp', 'desc').get();
+      historialGlobal = []; snapshot.forEach(doc => historialGlobal.push(doc.data()));
+
+      renderHistorial(historialGlobal); 
+      calcularRachasYHero(historialGlobal); 
+      renderEvolucionEstricta7Dias(historialGlobal); 
+      renderCalendarioMesActual(historialGlobal); 
+    }
+
+    function aplicarFiltro(tipo, btn) {
+      document.querySelectorAll('.btn-filtro').forEach(b => b.classList.remove('activo')); btn.classList.add('activo');
+      if(tipo === 'ALL') renderHistorial(historialGlobal); else renderHistorial(historialGlobal.filter(d => d.veredicto === tipo));
+    }
+
+    function renderHistorial(entradas) {
+      const cont = document.getElementById('lista-historial'); cont.innerHTML = "";
+      if(entradas.length === 0) { cont.innerHTML = '<p class="texto-pequeno">Sin registros.</p>'; return; }
+      entradas.forEach(d => {
+        let label = d.veredicto === "POSITIVO" ? "DESTACADO" : (d.veredicto === "NEGATIVO" ? "MEJORABLE" : "NEUTRO");
+        let color = d.veredicto === "POSITIVO" ? "var(--accent)" : "#666";
+        
+        cont.innerHTML += `
+        <div class="item-historial ${d.veredicto}">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div style="font-weight:900; color:white; font-size:16px;">${esc(d.fechaDisplay)}</div>
+            <div style="font-size:11px; font-weight:700; color:${color}; border:1px solid ${color}; padding:3px 8px; border-radius:4px;">${label}</div>
+          </div>
+          <p style="margin:5px 0; font-size:18px; font-weight:700; color:white; font-style:italic;">"${esc(d.insight)}"</p>
+          <div style="font-size:14px; line-height:1.6; color:#ccc; margin-bottom:10px;">${esc(d.textoOriginal)}</div>
+          <div style="display:flex; gap:15px; border-top:1px solid #333; padding-top:15px;">
+            <div style="font-size:13px; color:#aaa; font-weight:500;">DIS: <span style="color:white; font-weight:bold">${d.disciplina||'-'}</span></div>
+            <div style="font-size:13px; color:#aaa; font-weight:500;">ENF: <span style="color:white; font-weight:bold">${d.enfoque||'-'}</span></div>
+            <div style="font-size:13px; color:#aaa; font-weight:500;">CON: <span style="color:white; font-weight:bold">${d.constancia||'-'}</span></div>
+          </div>
+        </div>`;
+      });
+    }
+
+    function calcularRachasYHero(entradas) {
+      let mapaDias = {};
+      entradas.forEach(e => { if (!mapaDias[e.fechaISO] || e.veredicto === 'POSITIVO') mapaDias[e.fechaISO] = e; });
+      let fechasUnicas = Object.keys(mapaDias).sort((a,b) => new Date(b) - new Date(a));
+      
+      let rachaActual = 0; let hoy = getHoyISO();
+      let ayer = new Date(); ayer.setDate(ayer.getDate() - 1); let ayerISO = ayer.toISOString().split('T')[0];
+      
+      let fechaAComprobar = fechasUnicas.includes(hoy) ? hoy : ayerISO;
+      let refDate = new Date(fechaAComprobar);
+      
+      for(let f of fechasUnicas) {
+         if (f === fechaAComprobar && mapaDias[f].veredicto === 'POSITIVO') {
+             rachaActual++; refDate.setDate(refDate.getDate() - 1);
+             fechaAComprobar = refDate.toISOString().split('T')[0];
+         } else break;
+      }
+
+      document.getElementById('racha-numero').textContent = rachaActual;
+
+      let sumaMedia = 0; let diasMedia = 0;
+      for(let i=0; i<7; i++) {
+        let tempD = new Date(); tempD.setDate(tempD.getDate() - i);
+        let dObj = mapaDias[tempD.toISOString().split('T')[0]];
+        if(dObj && dObj.puntuacionGlobal) { sumaMedia += dObj.puntuacionGlobal; diasMedia++; }
+      }
+      
+      const score = diasMedia > 0 ? (sumaMedia/diasMedia).toFixed(1) : '-';
+      document.getElementById('hero-score').textContent = score;
+      
+      let msg = "SIN DATOS";
+      if (diasMedia > 0) {
+          if(score >= 8) msg = "SEMANA IMPARABLE";
+          else if(score >= 6) msg = "RITMO CONSTANTE";
+          else msg = "HAY QUE MEJORAR";
+      }
+      document.getElementById('hero-msg').textContent = msg;
+    }
+
+    function renderEvolucionEstricta7Dias(entradas) {
+      let mapaDias = {};
+      entradas.forEach(e => { if(!mapaDias[e.fechaISO]) mapaDias[e.fechaISO] = e; });
+
+      const labels = []; const dataD = []; const dataE = []; const dataC = [];
+      const diasNombres = ['DOM','LUN','MAR','MIE','JUE','VIE','SAB'];
+
+      for(let i=6; i>=0; i--) {
+        let tempD = new Date(); tempD.setDate(tempD.getDate() - i);
+        let iso = `${tempD.getFullYear()}-${String(tempD.getMonth() + 1).padStart(2, '0')}-${String(tempD.getDate()).padStart(2, '0')}`;
+        labels.push(diasNombres[tempD.getDay()]);
+        
+        if(mapaDias[iso]) {
+          dataD.push(mapaDias[iso].disciplina); dataE.push(mapaDias[iso].enfoque); dataC.push(mapaDias[iso].constancia);
+        } else {
+          dataD.push(null); dataE.push(null); dataC.push(null);
+        }
+      }
+
+      Chart.defaults.color = '#808080';
+      Chart.defaults.font.family = "'Inter', sans-serif";
+      if (chartLine) chartLine.destroy();
+      chartLine = new Chart(document.getElementById('graficaEvolucion').getContext('2d'), {
+        type: 'line', data: { 
+          labels: labels, 
+          datasets: [
+            { label: 'DIS', data: dataD, borderColor: '#E50914', backgroundColor: 'transparent', borderWidth: 3, tension: 0.1, pointBackgroundColor: '#E50914', pointRadius:4 },
+            { label: 'ENF', data: dataE, borderColor: '#ffffff', backgroundColor: 'transparent', borderWidth: 2, tension: 0.1, borderDash: [4, 4], pointRadius:0 },
+            { label: 'CON', data: dataC, borderColor: '#808080', backgroundColor: 'transparent', borderWidth: 2, tension: 0.1, borderDash: [2, 2], pointRadius:0 }
+          ] 
+        },
+        options: { 
+            responsive: true, maintainAspectRatio: false, spanGaps: false, 
+            plugins: { legend: { display: true, position: 'bottom'} }, 
+            scales: { y: { min: 0, max: 10, grid: { color: '#2B2B2B' } }, x: { grid: { display: false } } } 
+        }
+      });
+    }
+
+    function renderCalendarioMesActual(entradas) {
+      const grid = document.getElementById('calendario-grid'); grid.innerHTML = "";
+      const hoy = new Date();
+      const año = hoy.getFullYear(); const mes = hoy.getMonth();
+      
+      let mapa = {}; entradas.forEach(d => { if(!mapa[d.fechaISO]) mapa[d.fechaISO] = d; });
+
+      ['L','M','X','J','V','S','D'].forEach(d => {
+          grid.innerHTML += `<div style="text-align:center; font-size:12px; color:var(--text-muted); font-weight:700; margin-bottom:8px;">${d}</div>`;
+      });
+
+      let primerDia = new Date(año, mes, 1).getDay();
+      primerDia = primerDia === 0 ? 6 : primerDia - 1; 
+      const diasEnMes = new Date(año, mes + 1, 0).getDate();
+
+      for(let i=0; i<primerDia; i++) grid.innerHTML += `<div></div>`;
+
+      const hoyISOReal = getHoyISO();
+
+      for(let i=1; i<=diasEnMes; i++) {
+        const diaISO = `${año}-${String(mes+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
+        let d = mapa[diaISO];
+        let clase = ""; let title = "Sin registro";
+        
+        if(d) {
+            title = `Nota: ${d.puntuacionGlobal || '-'}/10`;
+            if(d.veredicto === "POSITIVO") { clase = d.puntuacionGlobal >= 8.5 ? "int-3" : (d.puntuacionGlobal >= 7 ? "int-2" : "int-1"); } 
+            else if (d.veredicto === "NEGATIVO") clase = "neg";
+        }
+        
+        let isHoy = diaISO === hoyISOReal ? "dia-hoy" : "";
+        grid.innerHTML += `<div class="dia-cal ${clase} ${isHoy}" title="${title}">${i}</div>`;
+      }
+    }
+  </script>
+</body>
+</html>
