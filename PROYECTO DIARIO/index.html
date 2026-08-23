@@ -111,7 +111,10 @@
 </head>
 <body>
 
+  <!-- LOADER INICIAL -->
   <div id="loader-global"><div class="kyros-logo-pulse"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v20"/><path d="M20 2L8 12l12 10"/></svg></div></div>
+  
+  <!-- LOADER IA -->
   <div id="loader-ia"><div class="kyros-logo-pulse"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v20"/><path d="M20 2L8 12l12 10"/></svg></div><p style="margin-top: 20px; font-weight: 600; letter-spacing: 1px;">EVALUANDO DESEMPEÑO...</p></div>
 
   <!-- AUTH SCREEN -->
@@ -141,6 +144,7 @@
     </div>
   </div>
 
+  <!-- APLICACIÓN PRINCIPAL -->
   <div id="app-principal">
     <header>
       <div class="brand"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v20"/><path d="M20 2L8 12l12 10"/></svg> KYROS</div>
@@ -153,6 +157,7 @@
       </nav>
     </header>
 
+    <!-- 1. DIARIO -->
     <div id="diario" class="pestana activa">
       <div style="max-width: 650px; margin: 0 auto; width: 100%;">
         <div style="margin-bottom: 24px;"><h2 style="margin: 0; font-size: 28px; font-weight: 800; letter-spacing: -1px;">Informe de ejecución</h2><div id="fecha-diario" style="color: var(--text-muted); font-size: 14px; margin-top: 6px; font-weight: 500;"></div></div>
@@ -177,12 +182,13 @@
       </div>
     </div>
 
+    <!-- 2. TAREAS Y OBJETIVO -->
     <div id="tareas" class="pestana">
       <div class="card" style="max-width: 650px; margin: 0 auto; width: 100%;">
         <span class="card-title" style="margin-bottom: 8px;">Objetivo Principal</span>
-        <p class="texto-pequeno" style="margin-bottom: 24px;">Fija tu gran meta. Al darle a Guardar, la IA evaluará tu progreso hacia ella y aparecerá en tu panel de Rendimiento.</p>
+        <p class="texto-pequeno" style="margin-bottom: 24px;">Fija tu gran meta. La IA evaluará diariamente tu progreso hacia ella.</p>
         <div style="display:flex; gap:16px; margin-bottom:40px; border-bottom: 1px dashed var(--border); padding-bottom: 30px;">
-           <input type="text" id="input-objetivo" placeholder="Ej: Aprobar el Grado y ganar 3kg de masa..." onkeypress="if(event.key === 'Enter') guardarObjetivo()" style="background:var(--bg);">
+           <input type="text" id="input-objetivo" placeholder="Ej: Correr una maratón o aprobar oposiciones..." onkeypress="if(event.key === 'Enter') guardarObjetivo()" style="background:var(--bg);">
            <button class="btn-principal" style="width:auto; padding:0 24px; background:var(--surface); color:var(--text-main); border:1px solid var(--border);" onclick="guardarObjetivo()">Guardar</button>
         </div>
         <span class="card-title" style="margin-bottom: 8px;">Planificación Estratégica (Hoy)</span>
@@ -195,6 +201,7 @@
       </div>
     </div>
 
+    <!-- 3. PANEL RENDIMIENTO -->
     <div id="panel" class="pestana">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: -10px;">
         <h2 style="margin:0;">Métricas</h2>
@@ -202,7 +209,7 @@
       </div>
       <div id="export-area" style="background:var(--bg); padding:10px; border-radius:12px;">
         <div class="card" id="tarjeta-progreso-objetivo" style="display:none; margin-bottom: 24px; padding: 24px 32px; border-color:var(--border);">
-            <span class="card-title" id="titulo-barra-tareas" style="color:var(--text-main); margin-bottom:16px;">META: </span>
+            <span class="card-title" id="titulo-meta-panel" style="color:var(--text-main); margin-bottom:16px;">META: </span>
             <div style="display: flex; justify-content: space-between; align-items: center;">
                  <span style="font-size: 13px; color: var(--text-muted); font-weight:500;">Progreso evaluado por IA</span>
                  <span style="font-size: 16px; font-weight: 700; color: var(--success); font-family:var(--font-mono);" id="text-progreso-obj">0%</span>
@@ -221,6 +228,7 @@
       </div>
     </div>
 
+    <!-- 4. HISTORIAL -->
     <div id="historial" class="pestana">
       <div style="max-width: 700px; margin: 0 auto; width:100%;">
         <div class="filtro-historial">
@@ -251,6 +259,10 @@
     const auth = firebase.auth(); const db = firebase.firestore();
     
     let usuarioActual = null; let chartLine = null; let misTareasDeHoy = []; let historialGlobal = []; 
+    
+    // VARIABLE GLOBAL PARA ALMACENAR EL PERFIL (NOMBRE, EDAD, SEXO, OBJETIVO)
+    let datosPerfil = {};
+
     const frasesMotivadoras = ["«La fuerza no viene de ganar. Tus luchas desarrollan tus fortalezas.» – Arnold Schwarzenegger", "«El éxito no es un accidente. Es trabajo duro y sacrificio.» – Pelé", "«Si no te preparas, te estás preparando para fracasar.» – Roy Keane", "«La disciplina es hacer lo que odias hacer, pero hacerlo como si lo amaras.» – Mike Tyson", "«No te detengas cuando estés cansado. Detente cuando hayas terminado.» – David Goggins", "«Para ser el mejor tienes que trabajar horas extras.» – Cristiano Ronaldo", "«La disciplina es el puente entre tus metas y tus logros.» – Jim Rohn"];
     const opcionesFecha = { weekday: 'long', day: 'numeric', month: 'long' };
     let fechaStr = new Date().toLocaleDateString('es-ES', opcionesFecha);
@@ -263,7 +275,7 @@
 
     auth.onAuthStateChanged((user) => {
       if (user && !user.isAnonymous && !user.emailVerified) { document.getElementById('login-error').textContent = "Debes verificar tu correo antes de entrar. Revisa tu bandeja de entrada o Spam."; auth.signOut(); return; }
-      if (user) { usuarioActual = user; document.getElementById('pantalla-auth').style.display = 'none'; document.getElementById('app-principal').style.display = 'flex'; cargarDatosNube(); cargarTareasNube(); cargarObjetivo(); } 
+      if (user) { usuarioActual = user; document.getElementById('pantalla-auth').style.display = 'none'; document.getElementById('app-principal').style.display = 'flex'; cargarDatosNube(); cargarTareasNube(); cargarPerfil(); } 
       else { usuarioActual = null; document.getElementById('app-principal').style.display = 'none'; document.getElementById('pantalla-auth').style.display = 'flex'; }
     });
 
@@ -305,22 +317,40 @@
     async function loginInvitado() { try { await auth.signInAnonymously(); } catch (e) { document.getElementById('login-error').textContent = "Fallo modo invitado."; } }
     function cerrarSesion() { auth.signOut(); }
 
-    async function guardarObjetivo() {
-        const obj = document.getElementById('input-objetivo').value.trim(); if(!obj) return;
-        if(usuarioActual && !usuarioActual.isAnonymous) { await db.collection('usuarios').doc(usuarioActual.uid).set({ objetivoActual: obj }, { merge: true }); }
-        cargarObjetivo(); cambiarPestana('panel', null); 
-    }
-    
-    async function cargarObjetivo() {
+    // --- PERFIL Y OBJETIVOS ---
+    async function cargarPerfil() {
         if(usuarioActual && !usuarioActual.isAnonymous) {
             const doc = await db.collection('usuarios').doc(usuarioActual.uid).get();
-            if(doc.exists && doc.data().objetivoActual) {
-                const obj = doc.data().objetivoActual; document.getElementById('input-objetivo').value = obj; document.getElementById('tarjeta-progreso-objetivo').style.display = 'block'; document.getElementById('titulo-barra-tareas').textContent = "META: " + obj.toUpperCase();
-                if(doc.data().progresoObjetivo !== undefined) { const prog = doc.data().progresoObjetivo; document.getElementById('text-progreso-obj').textContent = `${prog}%`; document.getElementById('barra-objetivo').style.width = `${prog}%`; }
+            if(doc.exists) {
+                datosPerfil = doc.data();
+                if(datosPerfil.objetivoActual) {
+                    document.getElementById('input-objetivo').value = datosPerfil.objetivoActual; 
+                    document.getElementById('tarjeta-progreso-objetivo').style.display = 'block'; 
+                    document.getElementById('titulo-meta-panel').textContent = "META: " + datosPerfil.objetivoActual.toUpperCase();
+                    if(datosPerfil.progresoObjetivo !== undefined) { 
+                        const prog = datosPerfil.progresoObjetivo; 
+                        document.getElementById('text-progreso-obj').textContent = `${prog}%`; 
+                        document.getElementById('barra-objetivo').style.width = `${prog}%`; 
+                    }
+                }
             }
         }
     }
 
+    async function guardarObjetivo() {
+        const obj = document.getElementById('input-objetivo').value.trim(); if(!obj) return;
+        if(usuarioActual && !usuarioActual.isAnonymous) { await db.collection('usuarios').doc(usuarioActual.uid).set({ objetivoActual: obj }, { merge: true }); }
+        
+        // Efecto visual instantáneo
+        document.getElementById('tarjeta-progreso-objetivo').style.display = 'block'; 
+        document.getElementById('titulo-meta-panel').textContent = "META: " + obj.toUpperCase();
+        document.getElementById('text-progreso-obj').textContent = "Calculando...";
+        
+        cargarPerfil(); 
+        cambiarPestana('panel', document.querySelectorAll('.nav-btn')[2]); 
+    }
+
+    // --- TAREAS ---
     async function cargarTareasNube() { if(!usuarioActual) return; const snapshot = await db.collection('usuarios').doc(usuarioActual.uid).collection('tareas').where('fechaISO', '==', getHoyISO()).get(); misTareasDeHoy = []; snapshot.forEach(doc => misTareasDeHoy.push({ id: doc.id, ...doc.data() })); renderTareas(); }
     async function agregarTarea() { const input = document.getElementById('input-tarea'); const texto = input.value.trim(); if(!texto) return; const nueva = { texto, completada: false, fechaISO: getHoyISO(), timestamp: Date.now() }; const docRef = await db.collection('usuarios').doc(usuarioActual.uid).collection('tareas').add(nueva); misTareasDeHoy.push({ id: docRef.id, ...nueva }); input.value = ""; renderTareas(); }
     async function toggleTarea(id) { const tarea = misTareasDeHoy.find(t => t.id === id); if(!tarea) return; tarea.completada = !tarea.completada; renderTareas(); await db.collection('usuarios').doc(usuarioActual.uid).collection('tareas').doc(id).update({ completada: tarea.completada }); }
@@ -333,32 +363,33 @@
       const total = misTareasDeHoy.length; document.getElementById('tareas-completadas').textContent = `${completadas}/${total}`; document.getElementById('barra-tareas').style.width = total === 0 ? "0%" : `${(completadas/total)*100}%`;
     }
 
-    // --- LLAMADA A NETLIFY FUNCTIONS (TU ARCHIVO analizar.js) ---
+    // --- IA BACKEND CON CONTEXTO PERSONALIZADO ---
     async function analizarYGuardar() {
       const texto = document.getElementById('texto-diario').value; const errEl = document.getElementById('error-ia'); const btn = document.getElementById('btn-guardar');
       if (!texto.trim()) return; errEl.textContent = "";
       const loaderIa = document.getElementById('loader-ia'); loaderIa.style.display = 'flex'; loaderIa.style.opacity = '1';
 
       const tareasTXT = misTareasDeHoy.map(t => (t.completada ? '☑ ' : '☐ ') + t.texto).join('\n');
-      const objetivoActivo = document.getElementById('input-objetivo') ? document.getElementById('input-objetivo').value.trim() : "";
       
-      let prompt = `Actúa como un coach de alto rendimiento. Analiza la disciplina cruzando el diario CON la lista de tareas.`;
-      if (objetivoActivo) prompt += `\nEL OBJETIVO PRINCIPAL DEL USUARIO ES: "${objetivoActivo}". Evalúa si lo que ha hecho hoy le acerca a este objetivo y calcula qué porcentaje del objetivo (0 a 100) crees que lleva completado en total basándote en su texto.`;
-      prompt += `\nTareas de hoy:\n${tareasTXT || 'Ninguna tarea registrada.'}\nDiario: "${texto}"\nDevuelve ÚNICAMENTE un JSON válido (sin formato markdown ni tildes en las keys): {"veredicto":"POSITIVO|NEGATIVO|NEUTRO","disciplina":8,"enfoque":7,"constancia":9,"progreso_objetivo":15,"insight":"Frase corta y rotunda."}`;
-
       try {
-        // 🔥 ESTA ES LA CONEXIÓN EXACTA A TU SERVIDOR OCULTO DE NETLIFY 🔥
+        // ENVIAMOS EL CONTEXTO COMPLETO DEL USUARIO (EDAD, SEXO, META) AL BACKEND
         const resp = await fetch(`/.netlify/functions/analizar`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ prompt: prompt })
+          body: JSON.stringify({ 
+              texto: texto,
+              tareas: tareasTXT,
+              objetivo: datosPerfil.objetivoActual || "",
+              perfil: {
+                  nombre: datosPerfil.nombre || "Usuario",
+                  edad: datosPerfil.edad || "",
+                  sexo: datosPerfil.sexo || ""
+              }
+          })
         });
         
         const data = await resp.json();
-        
-        if (!resp.ok) {
-            throw new Error(data.error || 'Error desconocido del servidor Netlify');
-        }
+        if (!resp.ok) throw new Error(data.error || 'Error del servidor Netlify');
 
         let textoRaw = data.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '').trim();
         const iaData = JSON.parse(textoRaw);
@@ -373,15 +404,17 @@
         const nuevaEntrada = { fechaISO: getHoyISO(), fechaDisplay: f, timestamp: Date.now(), veredicto: v, textoOriginal: texto, disciplina: d, enfoque: e, constancia: c, puntuacionGlobal: globalScore, insight: iaData.insight || "El trabajo duro da resultados." };
         await db.collection('usuarios').doc(usuarioActual.uid).collection('entradas').add(nuevaEntrada);
         
-        if(usuarioActual && !usuarioActual.isAnonymous && objetivoActivo) { await db.collection('usuarios').doc(usuarioActual.uid).set({ progresoObjetivo: progresoObj }, { merge: true }); }
+        if(usuarioActual && !usuarioActual.isAnonymous && datosPerfil.objetivoActual) { 
+            await db.collection('usuarios').doc(usuarioActual.uid).set({ progresoObjetivo: progresoObj }, { merge: true }); 
+        }
 
         document.getElementById('ia-puntuacion-global').textContent = globalScore.toFixed(1); document.getElementById('ia-disciplina').textContent = d; document.getElementById('ia-enfoque').textContent = e; document.getElementById('ia-constancia').textContent = c;
         
         const quoteEl = document.getElementById('ia-quote');
-        if(v === "POSITIVO" || globalScore >= 7) { const randomQuote = frasesMotivadoras[Math.floor(Math.random() * frasesMotivadoras.length)]; quoteEl.innerHTML = `<strong>NOTA IA:</strong> "${esc(nuevaEntrada.insight)}"<br><br>${randomQuote}`; quoteEl.style.display = 'block'; } 
-        else { quoteEl.innerHTML = `<strong>NOTA IA:</strong> "${esc(nuevaEntrada.insight)}"`; quoteEl.style.display = 'block'; }
+        if(v === "POSITIVO" || globalScore >= 7) { const randomQuote = frasesMotivadoras[Math.floor(Math.random() * frasesMotivadoras.length)]; quoteEl.innerHTML = `<strong>NOTAS DEL COACH:</strong> "${esc(nuevaEntrada.insight)}"<br><br>${randomQuote}`; quoteEl.style.display = 'block'; } 
+        else { quoteEl.innerHTML = `<strong>NOTAS DEL COACH:</strong> "${esc(nuevaEntrada.insight)}"`; quoteEl.style.display = 'block'; }
 
-        document.getElementById('diario-zona-input').style.display = 'none'; document.getElementById('diario-zona-resultado').style.display = 'flex'; document.getElementById('texto-diario').value = ""; actualizarContador(); cargarDatosNube(); cargarObjetivo();
+        document.getElementById('diario-zona-input').style.display = 'none'; document.getElementById('diario-zona-resultado').style.display = 'flex'; document.getElementById('texto-diario').value = ""; actualizarContador(); cargarDatosNube(); cargarPerfil();
         loaderIa.style.opacity = '0'; setTimeout(()=> loaderIa.style.display = 'none', 500);
 
       } catch (err) { loaderIa.style.opacity = '0'; setTimeout(()=> loaderIa.style.display = 'none', 500); errEl.textContent = "ERROR IA: " + err.message; }
