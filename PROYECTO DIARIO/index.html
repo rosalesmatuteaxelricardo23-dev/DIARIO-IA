@@ -9,7 +9,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     
-    <!-- Librerías: Chart.js (Gráficas), Firebase (Backend), html2canvas (Exportar Imagen) -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -40,7 +39,7 @@
         -webkit-font-smoothing: antialiased; overflow-x: hidden;
       }
 
-      /* PANTALLAS DE CARGA Y OVERLAYS */
+      /* PANTALLAS DE CARGA */
       #loader-global, #loader-ia {
         position: fixed; top: 0; left: 0; width: 100%; height: 100%;
         background: var(--bg); z-index: 9999; display: flex; flex-direction: column;
@@ -50,7 +49,6 @@
       .kyros-logo-pulse svg { width: 64px; height: 64px; color: var(--text-main); animation: pulseLogo 1.5s infinite ease-in-out; }
       @keyframes pulseLogo { 0% { transform: scale(0.95); opacity: 0.5; filter: drop-shadow(0 0 0 transparent);} 50% { transform: scale(1.05); opacity: 1; filter: drop-shadow(0 0 20px rgba(255,255,255,0.4));} 100% { transform: scale(0.95); opacity: 0.5; filter: drop-shadow(0 0 0 transparent);} }
 
-      /* HEADER */
       header {
         width: 100%; display: flex; justify-content: space-between; align-items: center;
         padding: 16px 5vw; box-sizing: border-box; 
@@ -65,19 +63,17 @@
       .nav-btn:hover { color: var(--text-main); }
       .nav-btn.activo { background: var(--text-main); color: var(--bg); font-weight: 600; }
       
-      /* LOGIN / REGISTRO SEPARADOS */
+      /* LOGIN / REGISTRO */
       #pantalla-auth { display: flex; justify-content: center; align-items: center; height: 100vh; width: 100%; position: relative; }
       .auth-container { width: 90%; max-width: 380px; text-align: left; }
       .auth-view { display: none; flex-direction: column; animation: slideUp 0.4s ease; }
       .auth-view.active { display: flex; }
       @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-      /* LAYOUT PRINCIPAL */
       #app-principal { display: none; width: 100%; flex-direction: column; align-items: center; }
       .pestana { display: none; width: 92%; max-width: 900px; margin-top: 40px; flex-direction: column; gap: 24px; animation: slideUp 0.4s ease; padding-bottom: 80px;}
       .pestana.activa { display: flex; }
 
-      /* CARDS */
       .card { background: var(--surface); padding: 32px; border-radius: var(--radius-lg); border: 1px solid var(--border); }
       .card-title { font-size: 13px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 24px; display: block;}
       
@@ -90,7 +86,6 @@
       .barra-progreso { width: 100%; height: 6px; background: #27272A; border-radius: 3px; margin-top: 16px; overflow: hidden; }
       .progreso-fill { height: 100%; background: var(--text-main); transition: width 0.8s ease; border-radius: 3px; }
 
-      /* FORMS */
       textarea, input[type="text"], input[type="email"], input[type="password"], input[type="number"], select { 
           background: rgba(255,255,255,0.03); color: var(--text-main); border: 1px solid var(--border); 
           border-radius: var(--radius-md); padding: 16px 20px; font-size: 15px; width: 100%; box-sizing: border-box; 
@@ -101,7 +96,6 @@
       textarea::placeholder, input::placeholder { color: #52525B; }
       textarea:focus, input:focus, select:focus { outline: none; border-color: var(--text-main); background: rgba(255,255,255,0.06); }
       
-      /* BOTONES */
       .btn-principal { background: var(--text-main); color: var(--bg); border: none; padding: 16px; font-size: 15px; font-weight: 700; border-radius: var(--radius-md); cursor: pointer; width: 100%; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px; }
       .btn-principal:hover:not(:disabled) { transform: scale(0.98); opacity: 0.9; }
       .btn-principal:disabled { background: #27272A; color: #71717A; cursor: not-allowed; transform: none; }
@@ -109,14 +103,12 @@
       .btn-secundario { background: transparent; color: var(--text-main); border: 1px solid var(--border); padding: 16px; border-radius: var(--radius-md); cursor: pointer; font-weight: 600; font-size: 15px; width: 100%; transition: 0.2s;}
       .btn-secundario:hover { background: var(--surface-hover); }
 
-      /* TAREAS */
       .tarea-item { display:flex; justify-content:space-between; background:var(--bg); padding:16px 20px; border-radius: var(--radius-md); border: 1px solid var(--border); align-items:center; margin-bottom: 12px; transition: 0.2s;}
       .tarea-item:hover { border-color: var(--border-hover); }
       .check-box { width:22px; height:22px; border-radius:6px; border:2px solid #52525B; display:flex; align-items:center; justify-content:center; color:var(--bg); font-weight:bold; font-size:14px; transition: 0.2s; }
       .tarea-item.checked .check-box { background: var(--text-main); border-color: var(--text-main); }
       .tarea-item.checked span { text-decoration: line-through; color: #52525B; }
 
-      /* CALENDARIO */
       .calendario-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin-top: 16px; }
       .dia-cal { aspect-ratio: 1; border-radius: 8px; background: rgba(255,255,255,0.02); display: flex; align-items: center; justify-content: center; font-size: 12px; font-family: var(--font-mono); color: #52525B; transition: 0.2s; border: 1px solid transparent;}
       .dia-cal.int-3 { background: var(--text-main); color: var(--bg); font-weight: 700; box-shadow: 0 0 10px rgba(255,255,255,0.2);} 
@@ -125,7 +117,6 @@
       .dia-cal.neg { background: transparent; color: var(--danger); border-color: rgba(239, 68, 68, 0.2); }
       .dia-hoy { border: 1px solid #3B82F6 !important; color: #3B82F6; font-weight: 700;}
 
-      /* HISTORIAL */
       .filtro-historial { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap;}
       .btn-filtro { background: transparent; color: var(--text-muted); border: 1px solid var(--border); padding: 8px 16px; border-radius: 100px; cursor: pointer; font-size: 13px; font-weight: 500; transition: 0.2s; }
       .btn-filtro.activo { background: var(--text-main); color: var(--bg); border-color: var(--text-main); font-weight: 600;}
@@ -139,13 +130,15 @@
       #diario-zona-resultado { display: none; flex-direction: column; gap: 20px; align-items:center; text-align:center;}
       .google-logo { width: 18px; height: 18px; margin-right: 8px; }
 
-      /* SETTINGS / RECORDATORIOS */
       .setting-row { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid var(--border); }
       .setting-row:last-child { border-bottom: none; }
       .toggle-switch { width: 44px; height: 24px; background: var(--border); border-radius: 12px; position: relative; cursor: pointer; transition: 0.3s; }
       .toggle-switch::after { content: ''; position: absolute; width: 18px; height: 18px; background: white; border-radius: 50%; top: 3px; left: 3px; transition: 0.3s; }
       .toggle-switch.active { background: var(--text-main); }
       .toggle-switch.active::after { left: 23px; background: var(--bg); }
+      
+      /* Cita Motivacional */
+      .quote-box { margin-top: 20px; padding: 20px; background: rgba(255,255,255,0.05); border-left: 4px solid var(--text-main); border-radius: 8px; font-style: italic; color: #ccc; font-weight: 500; font-size: 15px; display: none; }
 
       @media(max-width: 600px) {
         header { padding: 16px 5vw; flex-direction:column; gap:16px; }
@@ -160,18 +153,14 @@
   <!-- PANTALLA DE CARGA INICIAL -->
   <div id="loader-global">
     <div class="kyros-logo-pulse">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M6 2v20"/><path d="M20 2L8 12l12 10"/>
-      </svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v20"/><path d="M20 2L8 12l12 10"/></svg>
     </div>
   </div>
 
   <!-- PANTALLA CARGA IA -->
   <div id="loader-ia">
     <div class="kyros-logo-pulse">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M6 2v20"/><path d="M20 2L8 12l12 10"/>
-      </svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v20"/><path d="M20 2L8 12l12 10"/></svg>
     </div>
     <p style="margin-top: 20px; font-weight: 600; letter-spacing: 1px;">EVALUANDO DESEMPEÑO...</p>
   </div>
@@ -204,6 +193,7 @@
       </button>
 
       <div style="text-align: center;">
+        <!-- BOTÓN CORREGIDO PARA LLEVAR AL REGISTRO -->
         <button onclick="toggleAuth('view-register')" style="background:none; border:none; color:var(--text-main); cursor:pointer; font-size:14px; font-weight:600;">¿No tienes cuenta? Regístrate</button><br>
         <button onclick="loginInvitado()" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:12px; margin-top:16px;">Acceso Modo Local (Demo)</button>
       </div>
@@ -273,25 +263,40 @@
              <p id="ia-insight" style="font-size: 18px; font-weight: 500; color: var(--text-main); font-style: italic; line-height:1.5;">"..."</p>
           </div>
 
-          <div style="display: flex; gap: 48px; justify-content: center; width: 100%; border-top: 1px solid var(--border); padding-top: 32px; margin-bottom: 32px;">
+          <div style="display: flex; gap: 48px; justify-content: center; width: 100%; border-top: 1px solid var(--border); padding-top: 32px; margin-bottom: 20px;">
             <div style="text-align:center;"><div style="font-size:12px; color:var(--text-muted); font-weight: 500;">DISCIPLINA</div><div style="font-family: var(--font-mono); font-weight:600; font-size:24px; margin-top:8px;" id="ia-disciplina">-</div></div>
             <div style="text-align:center;"><div style="font-size:12px; color:var(--text-muted); font-weight: 500;">ENFOQUE</div><div style="font-family: var(--font-mono); font-weight:600; font-size:24px; margin-top:8px;" id="ia-enfoque">-</div></div>
             <div style="text-align:center;"><div style="font-size:12px; color:var(--text-muted); font-weight: 500;">CONSTANCIA</div><div style="font-family: var(--font-mono); font-weight:600; font-size:24px; margin-top:8px;" id="ia-constancia">-</div></div>
           </div>
-          <button class="btn-secundario" style="width: auto; padding: 12px 32px;" onclick="irAlPanelDesdeResultado()">Ver panel general</button>
+
+          <!-- Cita Motivacional -->
+          <div id="ia-quote" class="quote-box"></div>
+
+          <button class="btn-secundario" style="width: auto; padding: 12px 32px; margin-top: 24px;" onclick="irAlPanelDesdeResultado()">Ver panel general</button>
         </div>
       </div>
     </div>
 
-    <!-- 2. PANEL -->
+    <!-- 2. PANEL RENDIMIENTO (CON OBJETIVOS Y EXPORTACIÓN) -->
     <div id="panel" class="pestana">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: -10px;">
         <h2 style="margin:0;">Métricas</h2>
-        <button class="btn-secundario" style="width:auto; padding:8px 16px; font-size:12px;" onclick="compartirProgreso()">Exportar (Imagen)</button>
+        <button class="btn-secundario" style="width:auto; padding:8px 16px; font-size:12px;" onclick="compartirProgreso()">Exportar Fotografía</button>
       </div>
       
       <!-- Contenedor a exportar con Html2Canvas -->
       <div id="export-area" style="background:var(--bg); padding:10px; border-radius:12px;">
+        
+        <!-- SECCIÓN OBJETIVO GLOBAL -->
+        <div class="card" style="margin-bottom: 24px; padding: 20px 32px;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+             <span class="card-title" style="margin-bottom:0; color:var(--text-main);">Objetivo Principal</span>
+             <button onclick="guardarObjetivo()" class="btn-secundario" style="width:auto; padding:6px 16px; font-size:12px;">Fijar Meta</button>
+          </div>
+          <input type="text" id="input-objetivo" placeholder="Ej: Ganar 3kg de masa y aprobar el Grado Superior..." style="margin-top:16px; border:none; border-bottom:1px solid var(--border); border-radius:0; background:transparent; padding:8px 0;">
+          <p style="font-size: 11px; color: var(--text-muted); margin-top: 8px;">La IA leerá esta meta y evaluará si tus acciones diarias te acercan a ella.</p>
+        </div>
+
         <div class="dash-grid">
           <div class="card" style="background: var(--surface);">
             <span class="card-title">Media Semanal</span>
@@ -304,7 +309,7 @@
             <div class="barra-progreso"><div id="barra-tareas" class="progreso-fill" style="width: 0%;"></div></div>
           </div>
           <div class="card">
-            <span class="card-title">Racha Activa</span>
+            <span class="card-title">Días Consecutivos</span>
             <div id="racha-numero" class="numero-gigante">0</div>
             <div class="texto-pequeno" id="racha-estado">Sin actividad</div>
           </div>
@@ -316,7 +321,7 @@
             <div style="height: 260px; width: 100%;"><canvas id="graficaEvolucion"></canvas></div>
           </div>
           <div class="card">
-            <span class="card-title">Mapa Térmico</span>
+            <span class="card-title">Calendario</span>
             <div class="calendario-grid" id="calendario-grid"></div>
           </div>
         </div>
@@ -327,11 +332,11 @@
     <div id="tareas" class="pestana">
       <div class="card" style="max-width: 650px; margin: 0 auto; width: 100%;">
         <span class="card-title" style="margin-bottom: 8px;">Planificación Estratégica</span>
-        <p class="texto-pequeno" style="margin-bottom: 32px;">Define tus objetivos. Completarlos sumará puntos al evaluarte.</p>
+        <p class="texto-pequeno" style="margin-bottom: 32px;">Define tus objetivos del día. La tasa de éxito impactará en tu análisis.</p>
         
         <div style="display:flex; gap:16px; margin-bottom:32px;">
            <input type="text" id="input-tarea" placeholder="Nuevo objetivo (Enter)" onkeypress="if(event.key === 'Enter') agregarTarea()">
-           <button class="btn-principal" style="width:auto; padding:0 24px;" onclick="agregarTarea()">Añadir</button>
+           <button class="btn-principal" style="width:auto; padding:0 24px;" onclick="agregarTarea()">Agregar</button>
         </div>
         <div id="lista-tareas" style="display:flex; flex-direction:column;"></div>
       </div>
@@ -372,7 +377,7 @@
   </div>
 
   <script>
-    // --- 0. LÓGICA DE PANTALLA DE CARGA ---
+    // --- LÓGICA DE PANTALLA DE CARGA ---
     window.addEventListener('load', () => {
       setTimeout(() => { document.getElementById('loader-global').style.opacity = '0'; setTimeout(() => { document.getElementById('loader-global').style.display = 'none'; }, 500); }, 800);
     });
@@ -392,10 +397,21 @@
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth(); const db = firebase.firestore();
     
-    // CLAVE IA FRONTEND
+    // CORRECCIÓN API GEMINI 1.5 FLASH
     const GEMINI_API_KEY = 'AQ.Ab8RN6LOhA4s1Dlsrj7qzb2MNdcYM6BAiZXTTPM2fEsKehQemg';
 
     let usuarioActual = null; let chartLine = null; let misTareasDeHoy = []; let historialGlobal = []; 
+
+    // FRASES MOTIVADORAS (Bodybuilders, Futbolistas, Mentores)
+    const frasesMotivadoras = [
+        "«La fuerza no viene de ganar. Tus luchas desarrollan tus fortalezas.» – Arnold Schwarzenegger",
+        "«El éxito no es un accidente. Es trabajo duro y sacrificio.» – Pelé",
+        "«Si no te preparas, te estás preparando para fracasar.» – Roy Keane",
+        "«La disciplina es hacer lo que odias hacer, pero hacerlo como si lo amaras.» – Mike Tyson",
+        "«No te detengas cuando estés cansado. Detente cuando hayas terminado.» – David Goggins",
+        "«Para ser el mejor tienes que trabajar horas extras.» – Cristiano Ronaldo",
+        "«La disciplina es el puente entre tus metas y tus logros.» – Jim Rohn"
+    ];
 
     const opcionesFecha = { weekday: 'long', day: 'numeric', month: 'long' };
     let fechaStr = new Date().toLocaleDateString('es-ES', opcionesFecha);
@@ -416,7 +432,7 @@
       window.scrollTo({top: 0, behavior: 'smooth'});
     }
 
-    // --- AUTH & VALIDATION ---
+    // --- AUTH Y REGISTRO AVANZADO ---
     function toggleAuth(viewId) {
       document.querySelectorAll('.auth-view').forEach(v => v.classList.remove('active'));
       document.getElementById(viewId).classList.add('active');
@@ -427,7 +443,7 @@
         usuarioActual = user; 
         document.getElementById('pantalla-auth').style.display = 'none'; 
         document.getElementById('app-principal').style.display = 'flex'; 
-        cargarDatosNube(); cargarTareasNube();
+        cargarDatosNube(); cargarTareasNube(); cargarObjetivo();
       } else { 
         usuarioActual = null; document.getElementById('app-principal').style.display = 'none'; document.getElementById('pantalla-auth').style.display = 'flex'; 
       }
@@ -450,22 +466,33 @@
 
       if(!nombre || !edad || !sexo || !email || !pass) return errEl.textContent = "Rellena todos los campos.";
       
-      // Validación Estricta Regex
       const passRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
-      if(!passRegex.test(pass)) return errEl.textContent = "La contraseña no cumple los requisitos.";
+      if(!passRegex.test(pass)) return errEl.textContent = "Requisito: 8 caracteres, 1 mayúscula, 1 número y símbolo especial.";
 
       try {
         const userCred = await auth.createUserWithEmailAndPassword(email, pass);
-        // Guardar Perfil en Firebase
-        await db.collection('usuarios').doc(userCred.user.uid).set({
-          nombre: nombre, edad: parseInt(edad), sexo: sexo, fechaRegistro: Date.now()
-        });
-      } catch (e) { errEl.textContent = "Error al registrar. El email podría estar en uso."; }
+        await db.collection('usuarios').doc(userCred.user.uid).set({ nombre: nombre, edad: parseInt(edad), sexo: sexo, fechaRegistro: Date.now() });
+      } catch (e) { errEl.textContent = e.message; }
     }
 
     async function loginGoogle() { try { await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); } catch (e) { document.getElementById('login-error').textContent = "Fallo en Google Auth."; } }
     async function loginInvitado() { try { await auth.signInAnonymously(); } catch (e) { document.getElementById('login-error').textContent = "Fallo modo invitado."; } }
     function cerrarSesion() { auth.signOut(); }
+
+    // --- OBJETIVOS GLOBALES ---
+    async function guardarObjetivo() {
+        const obj = document.getElementById('input-objetivo').value;
+        if(usuarioActual && !usuarioActual.isAnonymous) {
+            await db.collection('usuarios').doc(usuarioActual.uid).set({ objetivoActual: obj }, { merge: true });
+        }
+        alert("Objetivo fijado en tu cuenta.");
+    }
+    async function cargarObjetivo() {
+        if(usuarioActual && !usuarioActual.isAnonymous) {
+            const doc = await db.collection('usuarios').doc(usuarioActual.uid).get();
+            if(doc.exists && doc.data().objetivoActual) document.getElementById('input-objetivo').value = doc.data().objetivoActual;
+        }
+    }
 
     // --- RECORDATORIOS LOCALES ---
     let recordatorioActivado = localStorage.getItem('kyros_reminders') === 'true';
@@ -477,10 +504,8 @@
       if(recordatorioActivado) {
         el.classList.add('active'); localStorage.setItem('kyros_reminders', 'true');
         if(Notification.permission !== "granted") Notification.requestPermission();
-        alert("Recordatorios activados. Asegúrate de permitir notificaciones en el navegador.");
-      } else {
-        el.classList.remove('active'); localStorage.setItem('kyros_reminders', 'false');
-      }
+        alert("Recordatorios activados.");
+      } else { el.classList.remove('active'); localStorage.setItem('kyros_reminders', 'false'); }
     }
 
     // --- TAREAS ---
@@ -536,19 +561,20 @@
       if (!texto.trim()) return;
 
       errEl.textContent = "";
-      // MOSTRAR ANIMACIÓN IA
       const loaderIa = document.getElementById('loader-ia');
       loaderIa.style.display = 'flex'; loaderIa.style.opacity = '1';
 
       const tareasTXT = misTareasDeHoy.map(t => (t.completada ? '☑ ' : '☐ ') + t.texto).join('\n');
-      const prompt = `Analiza la disciplina cruzando el diario CON la lista de tareas.
-Tareas de hoy:
-${tareasTXT || 'Ninguna tarea registrada.'}
-Diario: "${texto}"
-Devuelve ÚNICAMENTE un JSON válido: {"veredicto":"POSITIVO|NEGATIVO|NEUTRO","disciplina":8,"enfoque":7,"constancia":9,"insight":"Frase corta y rotunda."}`;
+      const objetivoActivo = document.getElementById('input-objetivo').value.trim();
+      
+      let prompt = `Actúa como un coach de alto rendimiento. Analiza la disciplina cruzando el diario CON la lista de tareas.`;
+      if (objetivoActivo) prompt += `\nEL OBJETIVO PRINCIPAL DEL USUARIO ES: "${objetivoActivo}". Evalúa severamente si lo que ha hecho hoy le acerca o le aleja de este objetivo.`;
+      
+      prompt += `\nTareas de hoy:\n${tareasTXT || 'Ninguna tarea registrada.'}\nDiario: "${texto}"\nDevuelve ÚNICAMENTE un JSON válido: {"veredicto":"POSITIVO|NEGATIVO|NEUTRO","disciplina":8,"enfoque":7,"constancia":9,"insight":"Frase corta y rotunda que critique o alabe su acercamiento al objetivo."}`;
 
       try {
-        const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${GEMINI_API_KEY}`, {
+        // CORRECCIÓN DEL NOMBRE DEL MODELO (gemini-1.5-flash)
+        const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
         });
@@ -581,6 +607,13 @@ Devuelve ÚNICAMENTE un JSON válido: {"veredicto":"POSITIVO|NEGATIVO|NEUTRO","d
         document.getElementById('ia-constancia').textContent = c;
         document.getElementById('ia-insight').textContent = `"${esc(nuevaEntrada.insight)}"`;
         
+        // Frases de Leyendas si el día es Positivo
+        const quoteEl = document.getElementById('ia-quote');
+        if(v === "POSITIVO" || globalScore >= 7) {
+            const randomQuote = frasesMotivadoras[Math.floor(Math.random() * frasesMotivadoras.length)];
+            quoteEl.textContent = randomQuote; quoteEl.style.display = 'block';
+        } else { quoteEl.style.display = 'none'; }
+
         document.getElementById('diario-zona-input').style.display = 'none';
         document.getElementById('diario-zona-resultado').style.display = 'flex';
         document.getElementById('texto-diario').value = "";
@@ -590,7 +623,7 @@ Devuelve ÚNICAMENTE un JSON válido: {"veredicto":"POSITIVO|NEGATIVO|NEUTRO","d
 
       } catch (err) { 
         loaderIa.style.opacity = '0'; setTimeout(()=> loaderIa.style.display = 'none', 500);
-        errEl.textContent = "Fallo de conexión. Inténtalo de nuevo."; 
+        errEl.textContent = "Fallo al procesar. Revisa tu conexión a la IA."; 
       }
     }
 
@@ -603,7 +636,6 @@ Devuelve ÚNICAMENTE un JSON válido: {"veredicto":"POSITIVO|NEGATIVO|NEUTRO","d
     // --- COMPARTIR IMAGEN (HTML2CANVAS) ---
     async function compartirProgreso() {
       const area = document.getElementById('export-area');
-      // Forzamos un fondo negro opaco para la foto
       const canvas = await html2canvas(area, { backgroundColor: '#000000', scale: 2 });
       const dataUrl = canvas.toDataURL('image/png');
       const link = document.createElement('a');
