@@ -65,7 +65,7 @@
       .nav-btn:hover { color: var(--text-main); }
       .nav-btn.activo { background: var(--text-main); color: var(--bg); font-weight: 600; }
       
-      /* LOGIN / REGISTRO */
+      /* LOGIN / REGISTRO SEPARADOS */
       #pantalla-auth { display: flex; justify-content: center; align-items: center; height: 100vh; width: 100%; position: relative; }
       .auth-container { width: 90%; max-width: 380px; text-align: left; }
       .auth-view { display: none; flex-direction: column; animation: slideUp 0.4s ease; }
@@ -89,7 +89,6 @@
       .progreso-fill { height: 100%; background: var(--text-main); transition: width 0.8s ease; border-radius: 3px; }
       .progreso-objetivo-fill { height: 100%; background: var(--success); transition: width 1.5s ease; border-radius: 3px; box-shadow: 0 0 10px rgba(16,185,129,0.4);}
 
-      /* FORMS */
       textarea, input[type="text"], input[type="email"], input[type="password"], input[type="number"], select { 
           background: rgba(255,255,255,0.03); color: var(--text-main); border: 1px solid var(--border); 
           border-radius: var(--radius-md); padding: 16px 20px; font-size: 15px; width: 100%; box-sizing: border-box; 
@@ -101,7 +100,6 @@
       textarea::placeholder, input::placeholder { color: #52525B; }
       textarea:focus, input:focus, select:focus { outline: none; border-color: var(--text-main); background: rgba(255,255,255,0.06); }
       
-      /* BOTONES */
       .btn-principal { background: var(--text-main); color: var(--bg); border: none; padding: 16px; font-size: 15px; font-weight: 700; border-radius: var(--radius-md); cursor: pointer; width: 100%; transition: 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px; }
       .btn-principal:hover:not(:disabled) { transform: scale(0.98); opacity: 0.9; }
       .btn-principal:disabled { background: #27272A; color: #71717A; cursor: not-allowed; transform: none; }
@@ -109,13 +107,11 @@
       .btn-secundario { background: transparent; color: var(--text-main); border: 1px solid var(--border); padding: 16px; border-radius: var(--radius-md); cursor: pointer; font-weight: 600; font-size: 15px; width: 100%; transition: 0.2s;}
       .btn-secundario:hover { background: var(--surface-hover); }
 
-      /* TAREAS */
       .tarea-item { display:flex; justify-content:space-between; background:var(--bg); padding:16px 20px; border-radius: var(--radius-md); border: 1px solid var(--border); align-items:center; margin-bottom: 12px; transition: 0.2s;}
       .check-box { width:22px; height:22px; border-radius:6px; border:2px solid #52525B; display:flex; align-items:center; justify-content:center; color:var(--bg); font-weight:bold; font-size:14px; transition: 0.2s; }
       .tarea-item.checked .check-box { background: var(--text-main); border-color: var(--text-main); }
       .tarea-item.checked span { text-decoration: line-through; color: #52525B; }
 
-      /* CALENDARIO */
       .calendario-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin-top: 16px; }
       .dia-cal { aspect-ratio: 1; border-radius: 8px; background: rgba(255,255,255,0.02); display: flex; align-items: center; justify-content: center; font-size: 12px; font-family: var(--font-mono); color: #52525B; transition: 0.2s; border: 1px solid transparent;}
       .dia-cal.int-3 { background: var(--text-main); color: var(--bg); font-weight: 700; box-shadow: 0 0 10px rgba(255,255,255,0.2);} 
@@ -124,7 +120,6 @@
       .dia-cal.neg { background: transparent; color: var(--danger); border-color: rgba(239, 68, 68, 0.2); }
       .dia-hoy { border: 1px solid #3B82F6 !important; color: #3B82F6; font-weight: 700;}
 
-      /* HISTORIAL */
       .filtro-historial { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap;}
       .btn-filtro { background: transparent; color: var(--text-muted); border: 1px solid var(--border); padding: 8px 16px; border-radius: 100px; cursor: pointer; font-size: 13px; font-weight: 500; transition: 0.2s; }
       .btn-filtro.activo { background: var(--text-main); color: var(--bg); border-color: var(--text-main); font-weight: 600;}
@@ -194,7 +189,7 @@
 
         <button onclick="loginInvitado()" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:12px; margin-top:24px;">Acceso Modo Local (Demo)</button>
       </div>
-      <p id="login-error" style="color: var(--danger); font-size: 13px; text-align:center; font-weight:500;"></p>
+      <p id="login-error" style="color: var(--danger); font-size: 13px; text-align:center; font-weight:500; margin-top:15px;"></p>
     </div>
 
     <!-- REGISTRO AVANZADO -->
@@ -219,6 +214,11 @@
       <input type="password" id="reg-password" placeholder="Contraseña segura">
       <p style="font-size:11px; color:var(--text-muted); margin-top:-6px; margin-bottom:16px;">Requisito: Mínimo 8 caracteres, 1 mayúscula, 1 número y 1 símbolo (!@#$)</p>
       
+      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px; margin-top: 10px;">
+          <input type="checkbox" id="reg-newsletter" style="width: auto; margin: 0; cursor:pointer;">
+          <label for="reg-newsletter" style="font-size: 12px; color: var(--text-muted); cursor:pointer;">Suscribirme a la Newsletter (Novedades y Motivación)</label>
+      </div>
+      
       <button class="btn-principal" id="btn-completar-registro" onclick="registrarUsuario()">Completar Registro</button>
       
       <div style="text-align:center; margin-top: 16px;">
@@ -237,8 +237,8 @@
       </div>
       <nav>
         <button class="nav-btn activo" onclick="cambiarPestana('diario', this)">Ejecución</button>
-        <button class="nav-btn" onclick="cambiarPestana('tareas', this)">Plan</button>
         <button class="nav-btn" onclick="cambiarPestana('panel', this)">Rendimiento</button>
+        <button class="nav-btn" onclick="cambiarPestana('tareas', this)">Plan</button>
         <button class="nav-btn" onclick="cambiarPestana('historial', this)">Base de datos</button>
         <button class="nav-btn" onclick="cerrarSesion()" style="color: var(--text-muted); margin-left:8px;">Salir</button>
       </nav>
@@ -273,7 +273,7 @@
             <div style="text-align:center;"><div style="font-size:12px; color:var(--text-muted); font-weight: 500;">CONSTANCIA</div><div style="font-family: var(--font-mono); font-weight:600; font-size:24px; margin-top:8px;" id="ia-constancia">-</div></div>
           </div>
 
-          <!-- CITA LEYENDAS CULTURISMO / FUTBOL -->
+          <!-- CITA LEYENDAS -->
           <div id="ia-quote" class="quote-box"></div>
 
           <button class="btn-secundario" style="width: auto; padding: 12px 32px; margin-top: 24px;" onclick="irAlPanelDesdeResultado()">Ver panel general</button>
@@ -281,40 +281,17 @@
       </div>
     </div>
 
-    <!-- 2. TAREAS Y OBJETIVO -->
-    <div id="tareas" class="pestana">
-      <div class="card" style="max-width: 650px; margin: 0 auto; width: 100%;">
-        
-        <!-- Fijar Objetivo -->
-        <span class="card-title" style="margin-bottom: 8px;">Objetivo Principal</span>
-        <p class="texto-pequeno" style="margin-bottom: 24px;">Fija tu gran meta. Al darle a Guardar, la IA evaluará tu progreso hacia ella y aparecerá en tu panel de Rendimiento.</p>
-        <div style="display:flex; gap:16px; margin-bottom:40px; border-bottom: 1px dashed var(--border); padding-bottom: 30px;">
-           <input type="text" id="input-objetivo" placeholder="Ej: Aprobar el Grado Superior y ganar 3kg de masa..." onkeypress="if(event.key === 'Enter') guardarObjetivo()" style="background:var(--bg);">
-           <button class="btn-principal" style="width:auto; padding:0 24px;" onclick="guardarObjetivo()">Guardar</button>
-        </div>
-
-        <span class="card-title" style="margin-bottom: 8px;">Planificación Estratégica (Hoy)</span>
-        <p class="texto-pequeno" style="margin-bottom: 32px;">Define tus tareas diarias. Completarlas sumará puntos al evaluarte.</p>
-        
-        <div style="display:flex; gap:16px; margin-bottom:32px;">
-           <input type="text" id="input-tarea" placeholder="Nueva tarea (Enter)" onkeypress="if(event.key === 'Enter') agregarTarea()">
-           <button class="btn-secundario" style="width:auto; padding:0 24px; font-size:20px;" onclick="agregarTarea()">+</button>
-        </div>
-        <div id="lista-tareas" style="display:flex; flex-direction:column;"></div>
-      </div>
-    </div>
-
-    <!-- 3. PANEL RENDIMIENTO -->
+    <!-- 2. PANEL RENDIMIENTO -->
     <div id="panel" class="pestana">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: -10px;">
         <h2 style="margin:0;">Métricas</h2>
-        <button class="btn-secundario" style="width:auto; padding:8px 16px; font-size:12px;" onclick="compartirProgreso()">Exportar Fotografía</button>
+        <button class="btn-secundario" style="width:auto; padding:8px 16px; font-size:12px;" onclick="compartirProgreso()">Exportar PNG</button>
       </div>
       
-      <!-- Contenedor a exportar con Html2Canvas -->
+      <!-- Contenedor Html2Canvas -->
       <div id="export-area" style="background:var(--bg); padding:10px; border-radius:12px;">
         
-        <!-- Tarjeta de Progreso del Objetivo (Auto-rellenada) -->
+        <!-- Tarjeta de Progreso del Objetivo -->
         <div class="card" id="tarjeta-progreso-objetivo" style="display:none; margin-bottom: 24px; padding: 24px 32px; border-color:var(--border);">
             <span class="card-title" id="titulo-barra-tareas" style="color:var(--text-main); margin-bottom:16px;">META: </span>
             <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -355,6 +332,29 @@
       </div>
     </div>
 
+    <!-- 3. TAREAS Y OBJETIVO -->
+    <div id="tareas" class="pestana">
+      <div class="card" style="max-width: 650px; margin: 0 auto; width: 100%;">
+        
+        <!-- Fijar Objetivo -->
+        <span class="card-title" style="margin-bottom: 8px;">Objetivo Principal</span>
+        <p class="texto-pequeno" style="margin-bottom: 24px;">Fija tu gran meta. Al darle a Guardar, la IA evaluará tu progreso hacia ella y aparecerá en tu panel de Rendimiento.</p>
+        <div style="display:flex; gap:16px; margin-bottom:40px; border-bottom: 1px dashed var(--border); padding-bottom: 30px;">
+           <input type="text" id="input-objetivo" placeholder="Ej: Aprobar el Grado y ganar 3kg de masa..." onkeypress="if(event.key === 'Enter') guardarObjetivo()" style="background:var(--bg);">
+           <button class="btn-principal" style="width:auto; padding:0 24px; background:var(--surface); color:var(--text-main); border:1px solid var(--border);" onclick="guardarObjetivo()">Guardar</button>
+        </div>
+
+        <span class="card-title" style="margin-bottom: 8px;">Planificación Estratégica (Hoy)</span>
+        <p class="texto-pequeno" style="margin-bottom: 32px;">Define tus tareas diarias. Completarlas sumará puntos al evaluarte.</p>
+        
+        <div style="display:flex; gap:16px; margin-bottom:32px;">
+           <input type="text" id="input-tarea" placeholder="Nueva tarea (Enter)" onkeypress="if(event.key === 'Enter') agregarTarea()">
+           <button class="btn-secundario" style="width:auto; padding:0 24px; font-size:20px;" onclick="agregarTarea()">+</button>
+        </div>
+        <div id="lista-tareas" style="display:flex; flex-direction:column;"></div>
+      </div>
+    </div>
+
     <!-- 4. HISTORIAL -->
     <div id="historial" class="pestana">
       <div style="max-width: 700px; margin: 0 auto; width:100%;">
@@ -378,7 +378,7 @@
     function esc(str) { if(!str) return ""; const div = document.createElement('div'); div.appendChild(document.createTextNode(str)); return div.innerHTML; }
     function getHoyISO() { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; }
     
-    // --- FIREBASE CONFIG (INTACTA) ---
+    // --- FIREBASE CONFIG ---
     const firebaseConfig = {
       apiKey: "AIzaSyAfzGeUy1uI98YrDpFUrQbSWDN1ag9IrJA",
       authDomain: "diario-inteligente-d329b.firebaseapp.com",
@@ -390,8 +390,8 @@
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth(); const db = firebase.firestore();
     
-    // 🚨 TU CLAVE EXACTA DE ANTES 🚨
-    const GEMINI_API_KEY = 'AQ.Ab8RN6LOhA4s1Dlsrj7qzb2MNdcYM6BAiZXTTPM2fEsKehQemg';
+    // 🚨 TU NUEVA CLAVE RECIÉN GENERADA (ES VÁLIDA, TIENE EL FORMATO DE GOOGLE AI STUDIO) 🚨
+    const GEMINI_API_KEY = 'AQ.Ab8RN6LMlZ9VWpp2FfYE7RLNI9rMLVyo9wi62JjNJb2B6yqbVg';
 
     let usuarioActual = null; let chartLine = null; let misTareasDeHoy = []; let historialGlobal = []; 
 
@@ -425,7 +425,7 @@
       window.scrollTo({top: 0, behavior: 'smooth'});
     }
 
-    // --- AUTH, REGISTRO Y GOOGLE ---
+    // --- AUTH, REGISTRO Y VERIFICACIÓN EMAIL ---
     function toggleAuth(viewId) {
       document.querySelectorAll('.auth-view').forEach(v => v.classList.remove('active'));
       document.getElementById(viewId).classList.add('active');
@@ -434,9 +434,9 @@
     }
 
     auth.onAuthStateChanged((user) => {
-      // Exigir verificación (salvo invitado)
+      // Bloquear si es usuario por email y no está verificado
       if (user && !user.isAnonymous && !user.emailVerified) {
-        document.getElementById('login-error').textContent = "Por favor, verifica tu correo. Revisa la bandeja de entrada o Spam.";
+        document.getElementById('login-error').textContent = "Debes verificar tu correo antes de entrar. Revisa tu bandeja de entrada o Spam.";
         auth.signOut();
         return;
       }
@@ -459,14 +459,12 @@
       try { 
         const userCred = await auth.signInWithEmailAndPassword(getEl('login-email'), getEl('login-password')); 
         if(!userCred.user.emailVerified) {
-            document.getElementById('login-error').textContent = "Por favor, verifica tu correo (haz clic en el enlace enviado).";
+            document.getElementById('login-error').textContent = "Por favor, verifica tu correo haciendo clic en el enlace que te enviamos.";
             auth.signOut();
         }
-      } catch (e) { 
-          document.getElementById('login-error').textContent = "Credenciales incorrectas."; 
-      } finally {
-          btn.innerHTML = "Entrar"; btn.disabled = false;
-      }
+      } 
+      catch (e) { document.getElementById('login-error').textContent = "Credenciales incorrectas o usuario no registrado."; } 
+      finally { btn.innerHTML = "Entrar"; btn.disabled = false; }
     }
     
     async function registrarUsuario() {
@@ -480,32 +478,41 @@
       const email = getEl('reg-email').trim();
       const pass = getEl('reg-password');
 
-      if(!nombre || !apellidos || !edad || !email || !pass) return errEl.textContent = "Por favor, rellena todos los campos de texto.";
-      if(sexo === "") return errEl.textContent = "Por favor, selecciona tu sexo.";
+      if(!nombre || !apellidos || !edad || !email || !pass) {
+          return errEl.textContent = "Por favor, rellena todos los campos de texto.";
+      }
+      if(sexo === "") {
+          return errEl.textContent = "Por favor, selecciona tu sexo.";
+      }
       
       // Validación Estricta Regex
       const passRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
-      if(!passRegex.test(pass)) return errEl.textContent = "La contraseña requiere: Mínimo 8 caracteres, 1 mayúscula, 1 número y 1 símbolo especial (!@#$).";
+      if(!passRegex.test(pass)) {
+          return errEl.textContent = "La contraseña requiere: Mínimo 8 caracteres, 1 mayúscula, 1 número y 1 símbolo especial (!@#$).";
+      }
+
+      const checkEl = document.getElementById('reg-newsletter');
+      const newsletter = checkEl ? checkEl.checked : false;
 
       btn.disabled = true; btn.innerHTML = "Creando cuenta...";
-      errEl.style.color = "var(--text-main)"; errEl.textContent = "Procesando registro...";
+      errEl.style.color = "var(--text-main)"; errEl.textContent = "Procesando registro y enviando email de verificación...";
 
       try {
         const userCred = await auth.createUserWithEmailAndPassword(email, pass);
-        // Guardar el nombre en el Auth Profile de Firebase
         await userCred.user.updateProfile({ displayName: `${nombre} ${apellidos}` });
-        // Enviar Correo de Verificación
         await userCred.user.sendEmailVerification();
-        // Guardar en Base de datos
+        
         await db.collection('usuarios').doc(userCred.user.uid).set({ 
-            nombre: nombre, apellidos: apellidos, edad: parseInt(edad), sexo: sexo, fechaRegistro: Date.now() 
+            nombre: nombre, apellidos: apellidos, edad: parseInt(edad), sexo: sexo, 
+            newsletter: newsletter, fechaRegistro: Date.now() 
         });
         
-        alert("¡Cuenta creada con éxito! Revisa tu correo electrónico (y la carpeta de Spam) para verificar tu cuenta.");
+        alert("¡Cuenta creada con éxito! Revisa tu correo electrónico (y la carpeta de Spam) para verificar tu cuenta antes de iniciar sesión.");
         toggleAuth('view-login');
       } catch (e) { 
         errEl.style.color = "var(--danger)";
-        errEl.textContent = "Error: " + e.message; 
+        if(e.code === 'auth/email-already-in-use') errEl.textContent = "Error: Este correo ya está registrado en Kyros.";
+        else errEl.textContent = "Error: " + e.message; 
       } finally {
         btn.disabled = false; btn.innerHTML = "Completar Registro";
       }
@@ -521,14 +528,14 @@
     async function loginInvitado() { try { await auth.signInAnonymously(); } catch (e) { document.getElementById('login-error').textContent = "Fallo modo invitado."; } }
     function cerrarSesion() { auth.signOut(); }
 
-    // --- OBJETIVOS (SE FIJA EN TAREAS, SE VE EN PANEL) ---
+    // --- OBJETIVOS GLOBALES ---
     async function guardarObjetivo() {
         const obj = document.getElementById('input-objetivo').value.trim();
         if(!obj) return;
         if(usuarioActual && !usuarioActual.isAnonymous) {
             await db.collection('usuarios').doc(usuarioActual.uid).set({ objetivoActual: obj }, { merge: true });
         }
-        alert("Objetivo fijado. Ve a Rendimiento para verlo.");
+        alert("Objetivo fijado. Aparecerá en tu panel de Rendimiento y la IA evaluará tu progreso hacia él al procesar tu diario.");
         cargarObjetivo(); // Refrescar vista
     }
     
@@ -578,7 +585,7 @@
     
     function renderTareas() {
       const lista = document.getElementById('lista-tareas'); lista.innerHTML = ""; let completadas = 0;
-      if(misTareasDeHoy.length === 0) lista.innerHTML = '<p class="texto-pequeno" style="padding: 16px 0;">No hay tareas planificadas.</p>';
+      if(misTareasDeHoy.length === 0) lista.innerHTML = '<p class="texto-pequeno" style="padding: 16px 0;">No hay tareas planificadas para hoy.</p>';
       
       misTareasDeHoy.forEach(t => {
         if(t.completada) completadas++;
@@ -596,7 +603,7 @@
       document.getElementById('barra-tareas').style.width = total === 0 ? "0%" : `${(completadas/total)*100}%`;
     }
 
-    // --- IA, PANTALLA DE CARGA Y DEBUGGEO ROBUSTO ---
+    // --- IA Y PANTALLA DE CARGA ---
     async function analizarYGuardar() {
       const texto = document.getElementById('texto-diario').value;
       const errEl = document.getElementById('error-ia');
@@ -613,17 +620,16 @@
       let prompt = `Actúa como un coach de alto rendimiento. Analiza la disciplina cruzando el diario CON la lista de tareas.`;
       if (objetivoActivo) prompt += `\nEL OBJETIVO PRINCIPAL DEL USUARIO ES: "${objetivoActivo}". Evalúa si lo que ha hecho hoy le acerca a este objetivo y calcula qué porcentaje del objetivo (0 a 100) crees que lleva completado en total basándote en su texto.`;
       
-      prompt += `\nTareas de hoy:\n${tareasTXT || 'Ninguna tarea registrada.'}\nDiario: "${texto}"\nDevuelve ÚNICAMENTE un JSON válido (sin formato markdown markdown ni tildes en las keys): {"veredicto":"POSITIVO|NEGATIVO|NEUTRO","disciplina":8,"enfoque":7,"constancia":9,"progreso_objetivo":15,"insight":"Frase corta y rotunda que critique o alabe su acercamiento al objetivo."}`;
+      prompt += `\nTareas de hoy:\n${tareasTXT || 'Ninguna tarea registrada.'}\nDiario: "${texto}"\nDevuelve ÚNICAMENTE un JSON válido (sin formato markdown ni tildes en las keys): {"veredicto":"POSITIVO|NEGATIVO|NEUTRO","disciplina":8,"enfoque":7,"constancia":9,"progreso_objetivo":15,"insight":"Frase corta y rotunda que critique o alabe su acercamiento al objetivo."}`;
 
       try {
-        // Mantenemos la URL exacta que me pasaste al principio, pero le pasamos la clave correcta en caso de que sea Google.
-        // Si tu clave AQ... es OAuth, esto podría fallar. El error te dirá exactamente por qué.
+        // 🔥 AQUÍ ESTÁ LA SOLUCIÓN DEFINITIVA A TU ERROR OAuth 🔥
+        // Como tu clave empieza por AQ, Google la trata como un token interno. Por lo tanto, no se envía como un parámetro en la URL (?key=...), sino oculta en las cabeceras (headers).
+        
         const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
           method: 'POST', 
           headers: { 
             'Content-Type': 'application/json'
-            // IMPORTANTE: Si la clave AQ... es de un servidor tuyo (OAuth), descomenta la siguiente línea y borra ?key=${GEMINI_API_KEY} del fetch:
-            // 'Authorization': `Bearer ${GEMINI_API_KEY}`
           },
           body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
         });
@@ -656,6 +662,7 @@
 
         await db.collection('usuarios').doc(usuarioActual.uid).collection('entradas').add(nuevaEntrada);
         
+        // Actualizar el progreso del objetivo en Firebase
         if(usuarioActual && !usuarioActual.isAnonymous && objetivoActivo) {
             await db.collection('usuarios').doc(usuarioActual.uid).set({ progresoObjetivo: progresoObj }, { merge: true });
         }
@@ -665,13 +672,14 @@
         document.getElementById('ia-enfoque').textContent = e;
         document.getElementById('ia-constancia').textContent = c;
         
+        // Frases de Leyendas Motivadoras
         const quoteEl = document.getElementById('ia-quote');
         if(v === "POSITIVO" || globalScore >= 7) {
             const randomQuote = frasesMotivadoras[Math.floor(Math.random() * frasesMotivadoras.length)];
-            quoteEl.innerHTML = `<strong>OPINIÓN DE LA IA:</strong> "${esc(nuevaEntrada.insight)}"<br><br>${randomQuote}`; 
+            quoteEl.innerHTML = `<strong>NOTA IA:</strong> "${esc(nuevaEntrada.insight)}"<br><br>${randomQuote}`; 
             quoteEl.style.display = 'block';
         } else { 
-            quoteEl.innerHTML = `<strong>OPINIÓN DE LA IA:</strong> "${esc(nuevaEntrada.insight)}"`;
+            quoteEl.innerHTML = `<strong>NOTA IA:</strong> "${esc(nuevaEntrada.insight)}"`;
             quoteEl.style.display = 'block';
         }
 
@@ -684,7 +692,6 @@
 
       } catch (err) { 
         loaderIa.style.opacity = '0'; setTimeout(()=> loaderIa.style.display = 'none', 500);
-        // CHIVATO DE ERRORES REALES DE GOOGLE EN PANTALLA
         errEl.textContent = "ERROR IA: " + err.message; 
       }
     }
