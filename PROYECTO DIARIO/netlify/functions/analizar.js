@@ -33,8 +33,7 @@ Devuelve ÚNICAMENTE un JSON válido (sin formato markdown ni tildes en las keys
 
         const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${GEMINI_API_KEY}`;
         
-        const fetch = (await import('node-fetch')).default;
-
+        // CERO LÍNEAS DE NODE-FETCH. USAMOS FETCH NATIVO DIRECTAMENTE.
         const respuesta = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
