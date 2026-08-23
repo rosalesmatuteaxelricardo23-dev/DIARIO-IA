@@ -26,6 +26,7 @@
         --text-muted: #A1A1AA;
         --brand: #FFFFFF;       
         --danger: #EF4444;
+        --success: #10B981;
         --radius-lg: 20px;
         --radius-md: 12px;
         --font-sans: 'Inter', -apple-system, sans-serif;
@@ -83,8 +84,11 @@
       .numero-gigante { font-family: var(--font-mono); font-size: 48px; font-weight: 700; color: var(--text-main); margin: 8px 0; letter-spacing: -2px;}
       .texto-pequeno { font-size: 14px; color: var(--text-muted); }
       
-      .barra-progreso { width: 100%; height: 6px; background: #27272A; border-radius: 3px; margin-top: 16px; overflow: hidden; }
-      .progreso-fill { height: 100%; background: var(--text-main); transition: width 0.8s ease; border-radius: 3px; }
+      .barra-progreso { width: 100%; height: 8px; background: #27272A; border-radius: 4px; margin-top: 16px; overflow: hidden; }
+      .progreso-fill { height: 100%; background: var(--text-main); transition: width 1s cubic-bezier(0.16, 1, 0.3, 1); border-radius: 4px; }
+      
+      /* Barra para el objetivo (Verde) */
+      .progreso-objetivo-fill { height: 100%; background: var(--success); transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); border-radius: 4px; box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);}
 
       textarea, input[type="text"], input[type="email"], input[type="password"], input[type="number"], select { 
           background: rgba(255,255,255,0.03); color: var(--text-main); border: 1px solid var(--border); 
@@ -104,7 +108,6 @@
       .btn-secundario:hover { background: var(--surface-hover); }
 
       .tarea-item { display:flex; justify-content:space-between; background:var(--bg); padding:16px 20px; border-radius: var(--radius-md); border: 1px solid var(--border); align-items:center; margin-bottom: 12px; transition: 0.2s;}
-      .tarea-item:hover { border-color: var(--border-hover); }
       .check-box { width:22px; height:22px; border-radius:6px; border:2px solid #52525B; display:flex; align-items:center; justify-content:center; color:var(--bg); font-weight:bold; font-size:14px; transition: 0.2s; }
       .tarea-item.checked .check-box { background: var(--text-main); border-color: var(--text-main); }
       .tarea-item.checked span { text-decoration: line-through; color: #52525B; }
@@ -128,17 +131,8 @@
       .tag-NEU { background: var(--border); color: var(--text-muted); }
 
       #diario-zona-resultado { display: none; flex-direction: column; gap: 20px; align-items:center; text-align:center;}
-      .google-logo { width: 18px; height: 18px; margin-right: 8px; }
-
-      .setting-row { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid var(--border); }
-      .setting-row:last-child { border-bottom: none; }
-      .toggle-switch { width: 44px; height: 24px; background: var(--border); border-radius: 12px; position: relative; cursor: pointer; transition: 0.3s; }
-      .toggle-switch::after { content: ''; position: absolute; width: 18px; height: 18px; background: white; border-radius: 50%; top: 3px; left: 3px; transition: 0.3s; }
-      .toggle-switch.active { background: var(--text-main); }
-      .toggle-switch.active::after { left: 23px; background: var(--bg); }
       
-      /* Cita Motivacional */
-      .quote-box { margin-top: 20px; padding: 20px; background: rgba(255,255,255,0.05); border-left: 4px solid var(--text-main); border-radius: 8px; font-style: italic; color: #ccc; font-weight: 500; font-size: 15px; display: none; }
+      .quote-box { margin-top: 20px; padding: 20px; background: rgba(255,255,255,0.05); border-left: 4px solid var(--text-main); border-radius: 8px; font-style: italic; color: var(--text-main); font-weight: 600; font-size: 16px; display: none; line-height: 1.5; }
 
       @media(max-width: 600px) {
         header { padding: 16px 5vw; flex-direction:column; gap:16px; }
@@ -150,25 +144,25 @@
 </head>
 <body>
 
-  <!-- PANTALLA DE CARGA INICIAL -->
+  <!-- LOADER INICIAL -->
   <div id="loader-global">
     <div class="kyros-logo-pulse">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v20"/><path d="M20 2L8 12l12 10"/></svg>
     </div>
   </div>
 
-  <!-- PANTALLA CARGA IA -->
+  <!-- LOADER IA -->
   <div id="loader-ia">
     <div class="kyros-logo-pulse">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v20"/><path d="M20 2L8 12l12 10"/></svg>
     </div>
-    <p style="margin-top: 20px; font-weight: 600; letter-spacing: 1px;">EVALUANDO DESEMPEÑO...</p>
+    <p style="margin-top: 20px; font-weight: 600; letter-spacing: 1px;">PROCESANDO TELEMETRÍA...</p>
   </div>
 
   <!-- AUTH SCREEN -->
   <div id="pantalla-auth">
     
-    <!-- VISTA LOGIN -->
+    <!-- LOGIN -->
     <div class="auth-container auth-view active" id="view-login">
       <div style="text-align:center; margin-bottom: 32px;">
         <div class="brand" style="justify-content: center; font-size:36px; margin-bottom: 8px;">
@@ -181,26 +175,15 @@
       <input type="email" id="login-email" placeholder="Correo electrónico">
       <input type="password" id="login-password" placeholder="Contraseña">
       <button class="btn-principal" style="margin-top: 12px; margin-bottom:12px;" onclick="loginEmail()">Entrar</button>
-      
-      <div style="display:flex; align-items:center; margin-bottom:12px;">
-          <div style="flex:1; height:1px; background:var(--border);"></div>
-          <span style="padding: 0 12px; color:#52525B; font-size:12px;">O</span>
-          <div style="flex:1; height:1px; background:var(--border);"></div>
-      </div>
-
-      <button class="btn-secundario" style="display: flex; justify-content: center; align-items: center; margin-bottom: 24px;" onclick="loginGoogle()">
-          <svg class="google-logo" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg> Google
-      </button>
 
       <div style="text-align: center;">
-        <!-- BOTÓN CORREGIDO PARA LLEVAR AL REGISTRO -->
-        <button onclick="toggleAuth('view-register')" style="background:none; border:none; color:var(--text-main); cursor:pointer; font-size:14px; font-weight:600;">¿No tienes cuenta? Regístrate</button><br>
+        <button onclick="toggleAuth('view-register')" style="background:none; border:none; color:var(--text-main); cursor:pointer; font-size:14px; font-weight:600; margin-top: 10px;">¿No tienes cuenta? Regístrate</button><br>
         <button onclick="loginInvitado()" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:12px; margin-top:16px;">Acceso Modo Local (Demo)</button>
       </div>
       <p id="login-error" style="color: var(--danger); font-size: 13px; text-align:center; font-weight:500;"></p>
     </div>
 
-    <!-- VISTA REGISTRO (Avanzado) -->
+    <!-- REGISTRO AVANZADO -->
     <div class="auth-container auth-view" id="view-register">
       <h2 style="margin-top:0; font-weight: 800; font-size: 24px; text-align: center;">Crear Perfil</h2>
       
@@ -212,14 +195,17 @@
         <option value="" disabled selected>Selecciona tu sexo</option>
         <option value="M">Hombre</option>
         <option value="F">Mujer</option>
-        <option value="O">Otro</option>
       </select>
       
       <input type="email" id="reg-email" placeholder="Correo electrónico">
-      <input type="password" id="reg-password" placeholder="Contraseña segura">
-      <p style="font-size:11px; color:var(--text-muted); margin-top:-6px; margin-bottom:12px;">Mín. 8 caracteres, 1 mayúscula, 1 número y 1 símbolo (!@#$)</p>
+      <input type="password" id="reg-password" placeholder="Contraseña (Mín 6 caracteres)">
       
-      <button class="btn-principal" onclick="registrarUsuario()" style="margin-top: 12px;">Completar Registro</button>
+      <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px; margin-top: 10px;">
+          <input type="checkbox" id="reg-newsletter" style="width: auto; margin: 0;">
+          <label for="reg-newsletter" style="font-size: 12px; color: var(--text-muted);">Suscribirme a la Newsletter (Novedades y Motivación)</label>
+      </div>
+      
+      <button class="btn-principal" onclick="registrarUsuario()">Completar Registro</button>
       <button class="btn-secundario" onclick="toggleAuth('view-login')" style="margin-top: 12px; border:none;">Volver al inicio</button>
       <p id="reg-error" style="color: var(--danger); font-size: 13px; text-align:center; font-weight:500;"></p>
     </div>
@@ -236,7 +222,7 @@
         <button class="nav-btn" onclick="cambiarPestana('panel', this)">Rendimiento</button>
         <button class="nav-btn" onclick="cambiarPestana('tareas', this)">Plan</button>
         <button class="nav-btn" onclick="cambiarPestana('historial', this)">Base de datos</button>
-        <button class="nav-btn" onclick="cambiarPestana('ajustes', this)">Configuración</button>
+        <button class="nav-btn" onclick="cerrarSesion()" style="color: var(--text-muted); margin-left:8px;">Salir</button>
       </nav>
     </header>
 
@@ -263,13 +249,13 @@
              <p id="ia-insight" style="font-size: 18px; font-weight: 500; color: var(--text-main); font-style: italic; line-height:1.5;">"..."</p>
           </div>
 
-          <div style="display: flex; gap: 48px; justify-content: center; width: 100%; border-top: 1px solid var(--border); padding-top: 32px; margin-bottom: 20px;">
+          <div style="display: flex; gap: 48px; justify-content: center; width: 100%; border-top: 1px solid var(--border); padding-top: 32px; margin-bottom: 10px;">
             <div style="text-align:center;"><div style="font-size:12px; color:var(--text-muted); font-weight: 500;">DISCIPLINA</div><div style="font-family: var(--font-mono); font-weight:600; font-size:24px; margin-top:8px;" id="ia-disciplina">-</div></div>
             <div style="text-align:center;"><div style="font-size:12px; color:var(--text-muted); font-weight: 500;">ENFOQUE</div><div style="font-family: var(--font-mono); font-weight:600; font-size:24px; margin-top:8px;" id="ia-enfoque">-</div></div>
             <div style="text-align:center;"><div style="font-size:12px; color:var(--text-muted); font-weight: 500;">CONSTANCIA</div><div style="font-family: var(--font-mono); font-weight:600; font-size:24px; margin-top:8px;" id="ia-constancia">-</div></div>
           </div>
 
-          <!-- Cita Motivacional -->
+          <!-- CITA LEYENDAS -->
           <div id="ia-quote" class="quote-box"></div>
 
           <button class="btn-secundario" style="width: auto; padding: 12px 32px; margin-top: 24px;" onclick="irAlPanelDesdeResultado()">Ver panel general</button>
@@ -277,24 +263,29 @@
       </div>
     </div>
 
-    <!-- 2. PANEL RENDIMIENTO (CON OBJETIVOS Y EXPORTACIÓN) -->
+    <!-- 2. PANEL RENDIMIENTO -->
     <div id="panel" class="pestana">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: -10px;">
         <h2 style="margin:0;">Métricas</h2>
-        <button class="btn-secundario" style="width:auto; padding:8px 16px; font-size:12px;" onclick="compartirProgreso()">Exportar Fotografía</button>
+        <button class="btn-secundario" style="width:auto; padding:8px 16px; font-size:12px;" onclick="compartirProgreso()">Descargar Imagen</button>
       </div>
       
-      <!-- Contenedor a exportar con Html2Canvas -->
+      <!-- Contenedor a exportar -->
       <div id="export-area" style="background:var(--bg); padding:10px; border-radius:12px;">
         
         <!-- SECCIÓN OBJETIVO GLOBAL -->
-        <div class="card" style="margin-bottom: 24px; padding: 20px 32px;">
+        <div class="card" style="margin-bottom: 24px; padding: 24px 32px;">
           <div style="display:flex; justify-content:space-between; align-items:center;">
              <span class="card-title" style="margin-bottom:0; color:var(--text-main);">Objetivo Principal</span>
              <button onclick="guardarObjetivo()" class="btn-secundario" style="width:auto; padding:6px 16px; font-size:12px;">Fijar Meta</button>
           </div>
-          <input type="text" id="input-objetivo" placeholder="Ej: Ganar 3kg de masa y aprobar el Grado Superior..." style="margin-top:16px; border:none; border-bottom:1px solid var(--border); border-radius:0; background:transparent; padding:8px 0;">
-          <p style="font-size: 11px; color: var(--text-muted); margin-top: 8px;">La IA leerá esta meta y evaluará si tus acciones diarias te acercan a ella.</p>
+          <input type="text" id="input-objetivo" placeholder="Ej: Ganar 3kg de masa y aprobar el Grado Superior..." style="margin-top:16px; border:none; border-bottom:1px solid var(--border); border-radius:0; background:transparent; padding:8px 0; color:var(--text-main);">
+          
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+             <span style="font-size: 12px; color: var(--text-muted);">Progreso evaluado por IA:</span>
+             <span style="font-size: 14px; font-weight: 700; color: var(--success);" id="text-progreso-obj">0%</span>
+          </div>
+          <div class="barra-progreso"><div id="barra-objetivo" class="progreso-objetivo-fill" style="width: 0%;"></div></div>
         </div>
 
         <div class="dash-grid">
@@ -332,11 +323,11 @@
     <div id="tareas" class="pestana">
       <div class="card" style="max-width: 650px; margin: 0 auto; width: 100%;">
         <span class="card-title" style="margin-bottom: 8px;">Planificación Estratégica</span>
-        <p class="texto-pequeno" style="margin-bottom: 32px;">Define tus objetivos del día. La tasa de éxito impactará en tu análisis.</p>
+        <p class="texto-pequeno" style="margin-bottom: 32px;">Define tus objetivos. Completarlos sumará puntos al evaluarte.</p>
         
         <div style="display:flex; gap:16px; margin-bottom:32px;">
            <input type="text" id="input-tarea" placeholder="Nuevo objetivo (Enter)" onkeypress="if(event.key === 'Enter') agregarTarea()">
-           <button class="btn-principal" style="width:auto; padding:0 24px;" onclick="agregarTarea()">Agregar</button>
+           <button class="btn-principal" style="width:auto; padding:0 24px;" onclick="agregarTarea()">Añadir</button>
         </div>
         <div id="lista-tareas" style="display:flex; flex-direction:column;"></div>
       </div>
@@ -354,30 +345,10 @@
       </div>
     </div>
 
-    <!-- 5. CONFIGURACIÓN Y RECORDATORIOS -->
-    <div id="ajustes" class="pestana">
-      <div class="card" style="max-width: 600px; margin: 0 auto; width: 100%;">
-        <h2 style="margin-top:0;">Configuración</h2>
-        <div class="setting-row">
-            <div>
-              <div style="font-weight:600; margin-bottom:4px;">Recordatorios Diarios</div>
-              <div style="font-size:13px; color:var(--text-muted);">Recibe una alerta visual en el navegador.</div>
-            </div>
-            <div class="toggle-switch" id="toggle-recordatorio" onclick="toggleRecordatorio()"></div>
-        </div>
-        <div class="setting-row" style="border:none;">
-            <div>
-              <div style="font-weight:600; margin-bottom:4px;">Cerrar sesión</div>
-              <div style="font-size:13px; color:var(--text-muted);">Desconecta tu dispositivo actual.</div>
-            </div>
-            <button class="btn-secundario" style="width:auto; padding:8px 16px; color:var(--danger); border-color:rgba(239,68,68,0.3);" onclick="cerrarSesion()">Salir</button>
-        </div>
-      </div>
-    </div>
   </div>
 
   <script>
-    // --- LÓGICA DE PANTALLA DE CARGA ---
+    // --- LÓGICA DE CARGA ---
     window.addEventListener('load', () => {
       setTimeout(() => { document.getElementById('loader-global').style.opacity = '0'; setTimeout(() => { document.getElementById('loader-global').style.display = 'none'; }, 500); }, 800);
     });
@@ -385,7 +356,7 @@
     function esc(str) { if(!str) return ""; const div = document.createElement('div'); div.appendChild(document.createTextNode(str)); return div.innerHTML; }
     function getHoyISO() { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; }
     
-    // --- FIREBASE CONFIG ---
+    // --- FIREBASE CONFIG (TU CONFIGURACIÓN EXACTA) ---
     const firebaseConfig = {
       apiKey: "AIzaSyAfzGeUy1uI98YrDpFUrQbSWDN1ag9IrJA",
       authDomain: "diario-inteligente-d329b.firebaseapp.com",
@@ -397,12 +368,12 @@
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth(); const db = firebase.firestore();
     
-    // CORRECCIÓN API GEMINI 1.5 FLASH
+    // 🚨 TU CLAVE ORIGINAL ASEGURADA Y EL MODELO OFICIAL GEMINI-1.5-FLASH 🚨
     const GEMINI_API_KEY = 'AQ.Ab8RN6LOhA4s1Dlsrj7qzb2MNdcYM6BAiZXTTPM2fEsKehQemg';
 
     let usuarioActual = null; let chartLine = null; let misTareasDeHoy = []; let historialGlobal = []; 
 
-    // FRASES MOTIVADORAS (Bodybuilders, Futbolistas, Mentores)
+    // FRASES MOTIVADORAS (Leyendas)
     const frasesMotivadoras = [
         "«La fuerza no viene de ganar. Tus luchas desarrollan tus fortalezas.» – Arnold Schwarzenegger",
         "«El éxito no es un accidente. Es trabajo duro y sacrificio.» – Pelé",
@@ -432,13 +403,20 @@
       window.scrollTo({top: 0, behavior: 'smooth'});
     }
 
-    // --- AUTH Y REGISTRO AVANZADO ---
+    // --- AUTH, REGISTRO Y VERIFICACIÓN EMAIL ---
     function toggleAuth(viewId) {
       document.querySelectorAll('.auth-view').forEach(v => v.classList.remove('active'));
       document.getElementById(viewId).classList.add('active');
     }
 
     auth.onAuthStateChanged((user) => {
+      // Bloquear si es usuario por email y no está verificado
+      if (user && !user.isAnonymous && !user.emailVerified) {
+        document.getElementById('login-error').textContent = "Debes verificar tu correo antes de entrar. Revisa tu bandeja de entrada.";
+        auth.signOut();
+        return;
+      }
+
       if (user) { 
         usuarioActual = user; 
         document.getElementById('pantalla-auth').style.display = 'none'; 
@@ -452,7 +430,13 @@
     const getEl = (id) => document.getElementById(id).value;
     
     async function loginEmail() { 
-      try { await auth.signInWithEmailAndPassword(getEl('login-email'), getEl('login-password')); } 
+      try { 
+        const userCred = await auth.signInWithEmailAndPassword(getEl('login-email'), getEl('login-password')); 
+        if(!userCred.user.emailVerified) {
+            document.getElementById('login-error').textContent = "Verifica tu correo haciendo clic en el enlace que te enviamos.";
+            auth.signOut();
+        }
+      } 
       catch (e) { document.getElementById('login-error').textContent = "Credenciales incorrectas."; } 
     }
     
@@ -463,19 +447,26 @@
       const sexo = getEl('reg-sexo');
       const email = getEl('reg-email').trim();
       const pass = getEl('reg-password');
+      const newsletter = document.getElementById('reg-newsletter').checked;
 
       if(!nombre || !edad || !sexo || !email || !pass) return errEl.textContent = "Rellena todos los campos.";
-      
-      const passRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
-      if(!passRegex.test(pass)) return errEl.textContent = "Requisito: 8 caracteres, 1 mayúscula, 1 número y símbolo especial.";
+      if(pass.length < 6) return errEl.textContent = "La contraseña debe tener mínimo 6 caracteres.";
 
       try {
         const userCred = await auth.createUserWithEmailAndPassword(email, pass);
-        await db.collection('usuarios').doc(userCred.user.uid).set({ nombre: nombre, edad: parseInt(edad), sexo: sexo, fechaRegistro: Date.now() });
-      } catch (e) { errEl.textContent = e.message; }
+        // ENVIAR EMAIL DE VERIFICACIÓN (LINK DE FIREBASE)
+        await userCred.user.sendEmailVerification();
+        
+        await db.collection('usuarios').doc(userCred.user.uid).set({ 
+            nombre: nombre, edad: parseInt(edad), sexo: sexo, 
+            newsletter: newsletter, fechaRegistro: Date.now() 
+        });
+        
+        alert("¡Cuenta creada! Te hemos enviado un enlace a tu correo. Haz clic en él para verificar tu cuenta y luego inicia sesión.");
+        toggleAuth('view-login');
+      } catch (e) { errEl.textContent = "Error: El email ya está en uso o es inválido."; }
     }
 
-    async function loginGoogle() { try { await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); } catch (e) { document.getElementById('login-error').textContent = "Fallo en Google Auth."; } }
     async function loginInvitado() { try { await auth.signInAnonymously(); } catch (e) { document.getElementById('login-error').textContent = "Fallo modo invitado."; } }
     function cerrarSesion() { auth.signOut(); }
 
@@ -484,28 +475,21 @@
         const obj = document.getElementById('input-objetivo').value;
         if(usuarioActual && !usuarioActual.isAnonymous) {
             await db.collection('usuarios').doc(usuarioActual.uid).set({ objetivoActual: obj }, { merge: true });
+            alert("Meta guardada. La IA la tendrá en cuenta.");
         }
-        alert("Objetivo fijado en tu cuenta.");
     }
     async function cargarObjetivo() {
         if(usuarioActual && !usuarioActual.isAnonymous) {
             const doc = await db.collection('usuarios').doc(usuarioActual.uid).get();
-            if(doc.exists && doc.data().objetivoActual) document.getElementById('input-objetivo').value = doc.data().objetivoActual;
+            if(doc.exists) {
+                if(doc.data().objetivoActual) document.getElementById('input-objetivo').value = doc.data().objetivoActual;
+                if(doc.data().progresoObjetivo !== undefined) {
+                    const prog = doc.data().progresoObjetivo;
+                    document.getElementById('text-progreso-obj').textContent = `${prog}%`;
+                    document.getElementById('barra-objetivo').style.width = `${prog}%`;
+                }
+            }
         }
-    }
-
-    // --- RECORDATORIOS LOCALES ---
-    let recordatorioActivado = localStorage.getItem('kyros_reminders') === 'true';
-    if(recordatorioActivado) document.getElementById('toggle-recordatorio').classList.add('active');
-
-    function toggleRecordatorio() {
-      recordatorioActivado = !recordatorioActivado;
-      const el = document.getElementById('toggle-recordatorio');
-      if(recordatorioActivado) {
-        el.classList.add('active'); localStorage.setItem('kyros_reminders', 'true');
-        if(Notification.permission !== "granted") Notification.requestPermission();
-        alert("Recordatorios activados.");
-      } else { el.classList.remove('active'); localStorage.setItem('kyros_reminders', 'false'); }
     }
 
     // --- TAREAS ---
@@ -554,10 +538,11 @@
       document.getElementById('barra-tareas').style.width = total === 0 ? "0%" : `${(completadas/total)*100}%`;
     }
 
-    // --- IA Y PANTALLA DE CARGA ---
+    // --- IA, PANTALLA DE CARGA Y DEBUGGEO ROBUSTO ---
     async function analizarYGuardar() {
       const texto = document.getElementById('texto-diario').value;
       const errEl = document.getElementById('error-ia');
+      const btn = document.getElementById('btn-guardar');
       if (!texto.trim()) return;
 
       errEl.textContent = "";
@@ -565,21 +550,26 @@
       loaderIa.style.display = 'flex'; loaderIa.style.opacity = '1';
 
       const tareasTXT = misTareasDeHoy.map(t => (t.completada ? '☑ ' : '☐ ') + t.texto).join('\n');
-      const objetivoActivo = document.getElementById('input-objetivo').value.trim();
+      const objetivoActivo = document.getElementById('input-objetivo') ? document.getElementById('input-objetivo').value.trim() : "";
       
       let prompt = `Actúa como un coach de alto rendimiento. Analiza la disciplina cruzando el diario CON la lista de tareas.`;
-      if (objetivoActivo) prompt += `\nEL OBJETIVO PRINCIPAL DEL USUARIO ES: "${objetivoActivo}". Evalúa severamente si lo que ha hecho hoy le acerca o le aleja de este objetivo.`;
+      if (objetivoActivo) prompt += `\nEL OBJETIVO PRINCIPAL DEL USUARIO ES: "${objetivoActivo}". Evalúa si lo que ha hecho hoy le acerca a este objetivo y calcula qué porcentaje del objetivo (0 a 100) crees que lleva completado en total hasta hoy.`;
       
-      prompt += `\nTareas de hoy:\n${tareasTXT || 'Ninguna tarea registrada.'}\nDiario: "${texto}"\nDevuelve ÚNICAMENTE un JSON válido: {"veredicto":"POSITIVO|NEGATIVO|NEUTRO","disciplina":8,"enfoque":7,"constancia":9,"insight":"Frase corta y rotunda que critique o alabe su acercamiento al objetivo."}`;
+      prompt += `\nTareas de hoy:\n${tareasTXT || 'Ninguna tarea registrada.'}\nDiario: "${texto}"\nDevuelve ÚNICAMENTE un JSON válido: {"veredicto":"POSITIVO|NEGATIVO|NEUTRO","disciplina":8,"enfoque":7,"constancia":9,"progreso_objetivo": 15,"insight":"Frase corta y rotunda que critique o alabe su acercamiento al objetivo."}`;
 
       try {
-        // CORRECCIÓN DEL NOMBRE DEL MODELO (gemini-1.5-flash)
+        // USANDO EL MODELO OFICIAL DE GOOGLE: gemini-1.5-flash
         const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
         });
         const data = await resp.json();
-        if (!resp.ok) throw new Error(data.error.message);
+        
+        // CHIVATO DE ERRORES REALES
+        if (!resp.ok) {
+            let errorMsg = data.error && data.error.message ? data.error.message : 'Error desconocido de la API';
+            throw new Error(errorMsg);
+        }
 
         let textoRaw = data.candidates[0].content.parts[0].text.replace(/```json/g, '').replace(/```/g, '').trim();
         const iaData = JSON.parse(textoRaw);
@@ -588,6 +578,7 @@
         const clamp = (num) => Math.min(Math.max(parseInt(num) || 5, 1), 10);
         const d = clamp(iaData.disciplina), e = clamp(iaData.enfoque), c = clamp(iaData.constancia);
         const globalScore = parseFloat(((d + e + c) / 3).toFixed(1));
+        const progresoObj = parseInt(iaData.progreso_objetivo) || 0;
 
         let f = new Date().toLocaleDateString('es-ES', {day:'numeric', month:'short'});
         const nuevaEntrada = {
@@ -600,6 +591,11 @@
         };
 
         await db.collection('usuarios').doc(usuarioActual.uid).collection('entradas').add(nuevaEntrada);
+        
+        // Actualizar el progreso del objetivo en la cuenta del usuario
+        if(usuarioActual && !usuarioActual.isAnonymous) {
+            await db.collection('usuarios').doc(usuarioActual.uid).set({ progresoObjetivo: progresoObj }, { merge: true });
+        }
 
         document.getElementById('ia-puntuacion-global').textContent = globalScore.toFixed(1);
         document.getElementById('ia-disciplina').textContent = d;
@@ -607,23 +603,23 @@
         document.getElementById('ia-constancia').textContent = c;
         document.getElementById('ia-insight').textContent = `"${esc(nuevaEntrada.insight)}"`;
         
-        // Frases de Leyendas si el día es Positivo
+        // Frases de Leyendas Motivadoras
         const quoteEl = document.getElementById('ia-quote');
         if(v === "POSITIVO" || globalScore >= 7) {
             const randomQuote = frasesMotivadoras[Math.floor(Math.random() * frasesMotivadoras.length)];
-            quoteEl.textContent = randomQuote; quoteEl.style.display = 'block';
+            quoteEl.innerHTML = randomQuote; quoteEl.style.display = 'block';
         } else { quoteEl.style.display = 'none'; }
 
         document.getElementById('diario-zona-input').style.display = 'none';
         document.getElementById('diario-zona-resultado').style.display = 'flex';
         document.getElementById('texto-diario').value = "";
-        actualizarContador(); cargarDatosNube();
+        actualizarContador(); cargarDatosNube(); cargarObjetivo();
         
         loaderIa.style.opacity = '0'; setTimeout(()=> loaderIa.style.display = 'none', 500);
 
       } catch (err) { 
         loaderIa.style.opacity = '0'; setTimeout(()=> loaderIa.style.display = 'none', 500);
-        errEl.textContent = "Fallo al procesar. Revisa tu conexión a la IA."; 
+        errEl.textContent = "ERROR IA: " + err.message; 
       }
     }
 
