@@ -84,11 +84,8 @@
       .numero-gigante { font-family: var(--font-mono); font-size: 48px; font-weight: 700; color: var(--text-main); margin: 8px 0; letter-spacing: -2px;}
       .texto-pequeno { font-size: 14px; color: var(--text-muted); }
       
-      .barra-progreso { width: 100%; height: 8px; background: #27272A; border-radius: 4px; margin-top: 16px; overflow: hidden; }
-      .progreso-fill { height: 100%; background: var(--text-main); transition: width 1s cubic-bezier(0.16, 1, 0.3, 1); border-radius: 4px; }
-      
-      /* Barra para el objetivo (Verde) */
-      .progreso-objetivo-fill { height: 100%; background: var(--success); transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1); border-radius: 4px; box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);}
+      .barra-progreso { width: 100%; height: 6px; background: #27272A; border-radius: 3px; margin-top: 16px; overflow: hidden; }
+      .progreso-fill { height: 100%; background: var(--text-main); transition: width 0.8s ease; border-radius: 3px; }
 
       textarea, input[type="text"], input[type="email"], input[type="password"], input[type="number"], select { 
           background: rgba(255,255,255,0.03); color: var(--text-main); border: 1px solid var(--border); 
@@ -131,8 +128,9 @@
       .tag-NEU { background: var(--border); color: var(--text-muted); }
 
       #diario-zona-resultado { display: none; flex-direction: column; gap: 20px; align-items:center; text-align:center;}
+      .google-logo { width: 18px; height: 18px; margin-right: 8px; }
       
-      .quote-box { margin-top: 20px; padding: 20px; background: rgba(255,255,255,0.05); border-left: 4px solid var(--text-main); border-radius: 8px; font-style: italic; color: var(--text-main); font-weight: 600; font-size: 16px; display: none; line-height: 1.5; }
+      .quote-box { margin-top: 20px; padding: 20px; background: rgba(255,255,255,0.05); border-left: 4px solid var(--text-main); border-radius: 8px; font-style: italic; color: #ccc; font-weight: 500; font-size: 15px; display: none; line-height: 1.5; }
 
       @media(max-width: 600px) {
         header { padding: 16px 5vw; flex-direction:column; gap:16px; }
@@ -156,7 +154,7 @@
     <div class="kyros-logo-pulse">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2v20"/><path d="M20 2L8 12l12 10"/></svg>
     </div>
-    <p style="margin-top: 20px; font-weight: 600; letter-spacing: 1px;">PROCESANDO TELEMETRÍA...</p>
+    <p style="margin-top: 20px; font-weight: 600; letter-spacing: 1px;">EVALUANDO DESEMPEÑO...</p>
   </div>
 
   <!-- AUTH SCREEN -->
@@ -174,7 +172,7 @@
       
       <input type="email" id="login-email" placeholder="Correo electrónico">
       <input type="password" id="login-password" placeholder="Contraseña">
-      <button class="btn-principal" style="margin-top: 12px; margin-bottom:12px;" onclick="loginEmail()">Entrar</button>
+      <button class="btn-principal" style="margin-top: 12px; margin-bottom:12px;" id="btn-iniciar" onclick="loginEmail()">Entrar</button>
 
       <div style="text-align: center;">
         <button onclick="toggleAuth('view-register')" style="background:none; border:none; color:var(--text-main); cursor:pointer; font-size:14px; font-weight:600; margin-top: 10px;">¿No tienes cuenta? Regístrate</button><br>
@@ -198,16 +196,21 @@
       </select>
       
       <input type="email" id="reg-email" placeholder="Correo electrónico">
-      <input type="password" id="reg-password" placeholder="Contraseña (Mín 6 caracteres)">
+      <input type="password" id="reg-password" placeholder="Contraseña segura">
+      <p style="font-size:11px; color:var(--text-muted); margin-top:-6px; margin-bottom:12px;">Requisito: Mínimo 8 caracteres, 1 mayúscula, 1 número y 1 símbolo especial (!@#$)</p>
       
       <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px; margin-top: 10px;">
           <input type="checkbox" id="reg-newsletter" style="width: auto; margin: 0;">
           <label for="reg-newsletter" style="font-size: 12px; color: var(--text-muted);">Suscribirme a la Newsletter (Novedades y Motivación)</label>
       </div>
       
-      <button class="btn-principal" onclick="registrarUsuario()">Completar Registro</button>
+      <button class="btn-principal" id="btn-completar-registro" onclick="registrarUsuario()">Completar Registro</button>
       <button class="btn-secundario" onclick="toggleAuth('view-login')" style="margin-top: 12px; border:none;">Volver al inicio</button>
-      <p id="reg-error" style="color: var(--danger); font-size: 13px; text-align:center; font-weight:500;"></p>
+      
+      <!-- Cuidado: El error aquí ahora es muy visual -->
+      <div id="reg-error-container" style="display:none; background: rgba(239, 68, 68, 0.1); border: 1px solid var(--danger); padding: 12px; border-radius: 8px; margin-top: 16px;">
+        <p id="reg-error" style="color: var(--danger); font-size: 13px; text-align:center; font-weight:600; margin:0;"></p>
+      </div>
     </div>
   </div>
 
@@ -255,7 +258,7 @@
             <div style="text-align:center;"><div style="font-size:12px; color:var(--text-muted); font-weight: 500;">CONSTANCIA</div><div style="font-family: var(--font-mono); font-weight:600; font-size:24px; margin-top:8px;" id="ia-constancia">-</div></div>
           </div>
 
-          <!-- CITA LEYENDAS -->
+          <!-- CITA LEYENDAS CULTURISMO / FUTBOL -->
           <div id="ia-quote" class="quote-box"></div>
 
           <button class="btn-secundario" style="width: auto; padding: 12px 32px; margin-top: 24px;" onclick="irAlPanelDesdeResultado()">Ver panel general</button>
@@ -267,27 +270,12 @@
     <div id="panel" class="pestana">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: -10px;">
         <h2 style="margin:0;">Métricas</h2>
-        <button class="btn-secundario" style="width:auto; padding:8px 16px; font-size:12px;" onclick="compartirProgreso()">Descargar Imagen</button>
+        <button class="btn-secundario" style="width:auto; padding:8px 16px; font-size:12px;" onclick="compartirProgreso()">Exportar PNG</button>
       </div>
       
-      <!-- Contenedor a exportar -->
+      <!-- Contenedor Html2Canvas -->
       <div id="export-area" style="background:var(--bg); padding:10px; border-radius:12px;">
         
-        <!-- SECCIÓN OBJETIVO GLOBAL -->
-        <div class="card" style="margin-bottom: 24px; padding: 24px 32px;">
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-             <span class="card-title" style="margin-bottom:0; color:var(--text-main);">Objetivo Principal</span>
-             <button onclick="guardarObjetivo()" class="btn-secundario" style="width:auto; padding:6px 16px; font-size:12px;">Fijar Meta</button>
-          </div>
-          <input type="text" id="input-objetivo" placeholder="Ej: Ganar 3kg de masa y aprobar el Grado Superior..." style="margin-top:16px; border:none; border-bottom:1px solid var(--border); border-radius:0; background:transparent; padding:8px 0; color:var(--text-main);">
-          
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
-             <span style="font-size: 12px; color: var(--text-muted);">Progreso evaluado por IA:</span>
-             <span style="font-size: 14px; font-weight: 700; color: var(--success);" id="text-progreso-obj">0%</span>
-          </div>
-          <div class="barra-progreso"><div id="barra-objetivo" class="progreso-objetivo-fill" style="width: 0%;"></div></div>
-        </div>
-
         <div class="dash-grid">
           <div class="card" style="background: var(--surface);">
             <span class="card-title">Media Semanal</span>
@@ -295,7 +283,8 @@
             <div class="texto-pequeno" id="hero-msg">Calculando...</div>
           </div>
           <div class="card">
-            <span class="card-title">Ejecución del Plan</span>
+            <!-- TITULO DINAMICO PARA EL OBJETIVO -->
+            <span class="card-title" id="titulo-barra-tareas">EJECUCIÓN DEL PLAN</span>
             <div id="tareas-completadas" class="numero-gigante">0/0</div>
             <div class="barra-progreso"><div id="barra-tareas" class="progreso-fill" style="width: 0%;"></div></div>
           </div>
@@ -319,11 +308,18 @@
       </div>
     </div>
 
-    <!-- 3. TAREAS -->
+    <!-- 3. TAREAS Y OBJETIVO -->
     <div id="tareas" class="pestana">
       <div class="card" style="max-width: 650px; margin: 0 auto; width: 100%;">
-        <span class="card-title" style="margin-bottom: 8px;">Planificación Estratégica</span>
-        <p class="texto-pequeno" style="margin-bottom: 32px;">Define tus objetivos. Completarlos sumará puntos al evaluarte.</p>
+        <span class="card-title" style="margin-bottom: 8px;">Objetivo Principal</span>
+        <p class="texto-pequeno" style="margin-bottom: 24px;">Fija tu meta. Aparecerá en tu panel y la IA evaluará tu progreso hacia ella.</p>
+        <div style="display:flex; gap:16px; margin-bottom:40px; border-bottom: 1px dashed var(--border); padding-bottom: 30px;">
+           <input type="text" id="input-objetivo" placeholder="Ej: Ganar 3kg de masa y aprobar el Grado..." style="border:1px solid var(--border); border-radius:8px;">
+           <button class="btn-principal" style="width:auto; padding:0 24px; background:var(--surface); color:var(--text-main); border:1px solid var(--border);" onclick="guardarObjetivo()">Fijar</button>
+        </div>
+
+        <span class="card-title" style="margin-bottom: 8px;">Plan de Acción (Hoy)</span>
+        <p class="texto-pequeno" style="margin-bottom: 32px;">Añade tus tareas diarias para acercarte a la meta.</p>
         
         <div style="display:flex; gap:16px; margin-bottom:32px;">
            <input type="text" id="input-tarea" placeholder="Nuevo objetivo (Enter)" onkeypress="if(event.key === 'Enter') agregarTarea()">
@@ -356,7 +352,7 @@
     function esc(str) { if(!str) return ""; const div = document.createElement('div'); div.appendChild(document.createTextNode(str)); return div.innerHTML; }
     function getHoyISO() { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; }
     
-    // --- FIREBASE CONFIG (TU CONFIGURACIÓN EXACTA) ---
+    // --- FIREBASE CONFIG (EXACTA) ---
     const firebaseConfig = {
       apiKey: "AIzaSyAfzGeUy1uI98YrDpFUrQbSWDN1ag9IrJA",
       authDomain: "diario-inteligente-d329b.firebaseapp.com",
@@ -368,12 +364,11 @@
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth(); const db = firebase.firestore();
     
-    // 🚨 TU CLAVE ORIGINAL ASEGURADA Y EL MODELO OFICIAL GEMINI-1.5-FLASH 🚨
+    // 🚨 TU CLAVE EXACTA DE ANTES (RESTITUIDA INTACTA) 🚨
     const GEMINI_API_KEY = 'AQ.Ab8RN6LOhA4s1Dlsrj7qzb2MNdcYM6BAiZXTTPM2fEsKehQemg';
 
     let usuarioActual = null; let chartLine = null; let misTareasDeHoy = []; let historialGlobal = []; 
 
-    // FRASES MOTIVADORAS (Leyendas)
     const frasesMotivadoras = [
         "«La fuerza no viene de ganar. Tus luchas desarrollan tus fortalezas.» – Arnold Schwarzenegger",
         "«El éxito no es un accidente. Es trabajo duro y sacrificio.» – Pelé",
@@ -407,6 +402,8 @@
     function toggleAuth(viewId) {
       document.querySelectorAll('.auth-view').forEach(v => v.classList.remove('active'));
       document.getElementById(viewId).classList.add('active');
+      document.getElementById('reg-error-container').style.display = 'none';
+      document.getElementById('login-error').textContent = "";
     }
 
     auth.onAuthStateChanged((user) => {
@@ -430,31 +427,60 @@
     const getEl = (id) => document.getElementById(id).value;
     
     async function loginEmail() { 
+      const btn = document.getElementById('btn-iniciar');
+      btn.innerHTML = "Iniciando..."; btn.disabled = true;
       try { 
         const userCred = await auth.signInWithEmailAndPassword(getEl('login-email'), getEl('login-password')); 
         if(!userCred.user.emailVerified) {
-            document.getElementById('login-error').textContent = "Verifica tu correo haciendo clic en el enlace que te enviamos.";
+            document.getElementById('login-error').textContent = "Por favor, verifica tu correo haciendo clic en el enlace que te enviamos.";
             auth.signOut();
         }
       } 
-      catch (e) { document.getElementById('login-error').textContent = "Credenciales incorrectas."; } 
+      catch (e) { document.getElementById('login-error').textContent = "Credenciales incorrectas."; btn.innerHTML = "Entrar"; btn.disabled = false; } 
     }
     
     async function registrarUsuario() {
+      const errContainer = document.getElementById('reg-error-container');
       const errEl = document.getElementById('reg-error');
+      const btn = document.getElementById('btn-completar-registro');
+      
       const nombre = getEl('reg-nombre').trim();
       const edad = getEl('reg-edad');
       const sexo = getEl('reg-sexo');
       const email = getEl('reg-email').trim();
       const pass = getEl('reg-password');
-      const newsletter = document.getElementById('reg-newsletter').checked;
+      
+      const checkEl = document.getElementById('reg-newsletter');
+      const newsletter = checkEl ? checkEl.checked : false;
 
-      if(!nombre || !edad || !sexo || !email || !pass) return errEl.textContent = "Rellena todos los campos.";
-      if(pass.length < 6) return errEl.textContent = "La contraseña debe tener mínimo 6 caracteres.";
+      errContainer.style.display = 'block';
+
+      if(!nombre || !edad || !email || !pass) {
+          errEl.textContent = "Por favor, rellena todos los campos de texto.";
+          return;
+      }
+      
+      if(sexo === "") {
+          errEl.textContent = "Por favor, selecciona tu sexo.";
+          return;
+      }
+      
+      // Validación estricta Regex
+      const passRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+      if(!passRegex.test(pass)) {
+          errEl.textContent = "Error: Mín. 8 caracteres, 1 mayúscula, 1 número y 1 símbolo especial (!@#$).";
+          return;
+      }
+
+      btn.disabled = true; btn.innerHTML = "Creando cuenta...";
+      errEl.style.color = "var(--text-main)";
+      errContainer.style.borderColor = "var(--border)";
+      errContainer.style.background = "transparent";
+      errEl.textContent = "Procesando...";
 
       try {
         const userCred = await auth.createUserWithEmailAndPassword(email, pass);
-        // ENVIAR EMAIL DE VERIFICACIÓN (LINK DE FIREBASE)
+        // ENVIAR EMAIL DE VERIFICACIÓN NATIVO DE FIREBASE
         await userCred.user.sendEmailVerification();
         
         await db.collection('usuarios').doc(userCred.user.uid).set({ 
@@ -463,31 +489,38 @@
         });
         
         alert("¡Cuenta creada! Te hemos enviado un enlace a tu correo. Haz clic en él para verificar tu cuenta y luego inicia sesión.");
+        btn.disabled = false; btn.innerHTML = "Completar Registro";
         toggleAuth('view-login');
-      } catch (e) { errEl.textContent = "Error: El email ya está en uso o es inválido."; }
+      } catch (e) { 
+        btn.disabled = false; btn.innerHTML = "Completar Registro";
+        errContainer.style.borderColor = "var(--danger)";
+        errContainer.style.background = "rgba(239, 68, 68, 0.1)";
+        errEl.style.color = "var(--danger)";
+        errEl.textContent = "Error: El email ya está en uso o es inválido."; 
+      }
     }
 
+    async function loginGoogle() { try { await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); } catch (e) { document.getElementById('login-error').textContent = "Fallo en Google Auth."; } }
     async function loginInvitado() { try { await auth.signInAnonymously(); } catch (e) { document.getElementById('login-error').textContent = "Fallo modo invitado."; } }
     function cerrarSesion() { auth.signOut(); }
 
-    // --- OBJETIVOS GLOBALES ---
+    // --- OBJETIVO GLOBAL Y UI (AUTO-TITULO) ---
     async function guardarObjetivo() {
-        const obj = document.getElementById('input-objetivo').value;
+        const obj = document.getElementById('input-objetivo').value.trim();
+        if(!obj) return;
         if(usuarioActual && !usuarioActual.isAnonymous) {
             await db.collection('usuarios').doc(usuarioActual.uid).set({ objetivoActual: obj }, { merge: true });
-            alert("Meta guardada. La IA la tendrá en cuenta.");
         }
+        document.getElementById('titulo-barra-tareas').textContent = "META: " + obj.toUpperCase();
+        alert("Objetivo fijado en tu cuenta.");
     }
+    
     async function cargarObjetivo() {
         if(usuarioActual && !usuarioActual.isAnonymous) {
             const doc = await db.collection('usuarios').doc(usuarioActual.uid).get();
-            if(doc.exists) {
-                if(doc.data().objetivoActual) document.getElementById('input-objetivo').value = doc.data().objetivoActual;
-                if(doc.data().progresoObjetivo !== undefined) {
-                    const prog = doc.data().progresoObjetivo;
-                    document.getElementById('text-progreso-obj').textContent = `${prog}%`;
-                    document.getElementById('barra-objetivo').style.width = `${prog}%`;
-                }
+            if(doc.exists && doc.data().objetivoActual) {
+                document.getElementById('input-objetivo').value = doc.data().objetivoActual;
+                document.getElementById('titulo-barra-tareas').textContent = "META: " + doc.data().objetivoActual.toUpperCase();
             }
         }
     }
@@ -538,7 +571,7 @@
       document.getElementById('barra-tareas').style.width = total === 0 ? "0%" : `${(completadas/total)*100}%`;
     }
 
-    // --- IA, PANTALLA DE CARGA Y DEBUGGEO ROBUSTO ---
+    // --- IA RESTAURADA CON EL MODELO EXACTO ANTERIOR ---
     async function analizarYGuardar() {
       const texto = document.getElementById('texto-diario').value;
       const errEl = document.getElementById('error-ia');
@@ -553,21 +586,20 @@
       const objetivoActivo = document.getElementById('input-objetivo') ? document.getElementById('input-objetivo').value.trim() : "";
       
       let prompt = `Actúa como un coach de alto rendimiento. Analiza la disciplina cruzando el diario CON la lista de tareas.`;
-      if (objetivoActivo) prompt += `\nEL OBJETIVO PRINCIPAL DEL USUARIO ES: "${objetivoActivo}". Evalúa si lo que ha hecho hoy le acerca a este objetivo y calcula qué porcentaje del objetivo (0 a 100) crees que lleva completado en total hasta hoy.`;
+      if (objetivoActivo) prompt += `\nEL OBJETIVO PRINCIPAL DEL USUARIO ES: "${objetivoActivo}". Evalúa si lo que ha hecho hoy le acerca a este objetivo.`;
       
-      prompt += `\nTareas de hoy:\n${tareasTXT || 'Ninguna tarea registrada.'}\nDiario: "${texto}"\nDevuelve ÚNICAMENTE un JSON válido: {"veredicto":"POSITIVO|NEGATIVO|NEUTRO","disciplina":8,"enfoque":7,"constancia":9,"progreso_objetivo": 15,"insight":"Frase corta y rotunda que critique o alabe su acercamiento al objetivo."}`;
+      prompt += `\nTareas de hoy:\n${tareasTXT || 'Ninguna tarea registrada.'}\nDiario: "${texto}"\nDevuelve ÚNICAMENTE un JSON válido: {"veredicto":"POSITIVO|NEGATIVO|NEUTRO","disciplina":8,"enfoque":7,"constancia":9,"insight":"Frase corta y rotunda que critique o alabe su acercamiento al objetivo."}`;
 
       try {
-        // USANDO EL MODELO OFICIAL DE GOOGLE: gemini-1.5-flash
-        const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+        // 🚨 AQUÍ ESTÁ EL MODELO RESTAURADO EXACTAMENTE COMO LO TENÍAS 🚨
+        const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${GEMINI_API_KEY}`, {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
         });
         const data = await resp.json();
         
-        // CHIVATO DE ERRORES REALES
         if (!resp.ok) {
-            let errorMsg = data.error && data.error.message ? data.error.message : 'Error desconocido de la API';
+            let errorMsg = data.error && data.error.message ? data.error.message : 'Error de la API';
             throw new Error(errorMsg);
         }
 
@@ -578,7 +610,6 @@
         const clamp = (num) => Math.min(Math.max(parseInt(num) || 5, 1), 10);
         const d = clamp(iaData.disciplina), e = clamp(iaData.enfoque), c = clamp(iaData.constancia);
         const globalScore = parseFloat(((d + e + c) / 3).toFixed(1));
-        const progresoObj = parseInt(iaData.progreso_objetivo) || 0;
 
         let f = new Date().toLocaleDateString('es-ES', {day:'numeric', month:'short'});
         const nuevaEntrada = {
@@ -591,11 +622,6 @@
         };
 
         await db.collection('usuarios').doc(usuarioActual.uid).collection('entradas').add(nuevaEntrada);
-        
-        // Actualizar el progreso del objetivo en la cuenta del usuario
-        if(usuarioActual && !usuarioActual.isAnonymous) {
-            await db.collection('usuarios').doc(usuarioActual.uid).set({ progresoObjetivo: progresoObj }, { merge: true });
-        }
 
         document.getElementById('ia-puntuacion-global').textContent = globalScore.toFixed(1);
         document.getElementById('ia-disciplina').textContent = d;
@@ -607,13 +633,13 @@
         const quoteEl = document.getElementById('ia-quote');
         if(v === "POSITIVO" || globalScore >= 7) {
             const randomQuote = frasesMotivadoras[Math.floor(Math.random() * frasesMotivadoras.length)];
-            quoteEl.innerHTML = randomQuote; quoteEl.style.display = 'block';
+            quoteEl.textContent = randomQuote; quoteEl.style.display = 'block';
         } else { quoteEl.style.display = 'none'; }
 
         document.getElementById('diario-zona-input').style.display = 'none';
         document.getElementById('diario-zona-resultado').style.display = 'flex';
         document.getElementById('texto-diario').value = "";
-        actualizarContador(); cargarDatosNube(); cargarObjetivo();
+        actualizarContador(); cargarDatosNube();
         
         loaderIa.style.opacity = '0'; setTimeout(()=> loaderIa.style.display = 'none', 500);
 
@@ -629,7 +655,7 @@
         cambiarPestana('panel', document.querySelectorAll('.nav-btn')[1]);
     }
 
-    // --- COMPARTIR IMAGEN (HTML2CANVAS) ---
+    // --- COMPARTIR IMAGEN ---
     async function compartirProgreso() {
       const area = document.getElementById('export-area');
       const canvas = await html2canvas(area, { backgroundColor: '#000000', scale: 2 });
@@ -700,6 +726,7 @@
       }
 
       document.getElementById('racha-numero').textContent = rachaActual;
+      document.getElementById('racha-estado').textContent = rachaActual > 0 ? "En racha" : "Inactivo";
 
       let sumaMedia = 0; let diasMedia = 0;
       for(let i=0; i<7; i++) {
