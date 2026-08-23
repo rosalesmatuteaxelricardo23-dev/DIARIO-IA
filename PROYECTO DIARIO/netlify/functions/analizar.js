@@ -13,9 +13,7 @@ exports.handler = async function(event, context) {
 
         const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${GEMINI_API_KEY}`;
         
-        // Carga dinámica obligatoria en Netlify para hacer fetch
-        const fetch = (await import('node-fetch')).default;
-
+        // ¡Usamos el fetch nativo de Netlify! Cero instalaciones necesarias.
         const respuesta = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
